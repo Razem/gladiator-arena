@@ -4,3 +4,8 @@ export enum Assets {
   WARRIOR_BLUE = 'warrior-blue',
   WARRIOR_RED = 'warrior-red',
 }
+
+export enum Names {
+  LAYER_BACKGROUND = 'layer_background',
+  BACKGROUND = 'background',
+}

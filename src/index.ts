@@ -39,20 +39,21 @@ class Game {
     } = this.engine
 
     const factory = new GameFactory()
+    factory.initialize(scene)
 
-    new ECSA.Builder(scene)
-    .localPos(this.engine.app.screen.width / 2, this.engine.app.screen.height / 2)
-    .anchor(0.5)
-    .withParent(scene.stage)
-    .withComponent(
-      new ECSA.GenericComponent('rotation')
-      .doOnUpdate((cmp, delta, absolute) => cmp.owner.asText().rotation += 0.001 * delta)
-    )
-    .asText(
-      'text', '\u0047\u004F\u004F\u0044 \u004C\u0055\u0043\u004B\u0021',
-      new PIXI.TextStyle({ fill: '#FF0000', fontSize: 80, fontFamily: 'Courier New' })
-    )
-    .build()
+    // new ECSA.Builder(scene)
+    // .localPos(this.engine.app.screen.width / 2, this.engine.app.screen.height / 2)
+    // .anchor(0.5)
+    // .withParent(scene.stage)
+    // .withComponent(
+    //   new ECSA.GenericComponent('rotation')
+    //   .doOnUpdate((cmp, delta, absolute) => cmp.owner.asText().rotation += 0.001 * delta)
+    // )
+    // .asText(
+    //   'text', '\u0047\u004F\u004F\u0044 \u004C\u0055\u0043\u004B\u0021',
+    //   new PIXI.TextStyle({ fill: '#FF0000', fontSize: 80, fontFamily: 'Courier New' })
+    // )
+    // .build()
   }
 }
 
