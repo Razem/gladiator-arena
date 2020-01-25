@@ -40,17 +40,9 @@ export default class GameFactory {
   }
 
   spawnPlayer(scene: ECSA.Scene, model: GameModel, resources: PIXI.IResourceDictionary) {
-    // const animation = new PIXI.AnimatedSprite(
-    //   resources[Assets.WARRIOR_BLUE].spritesheet.animations['warrior']
-    // )
-    // animation.animationSpeed = 1 / 7
-    // animation.loop = true
-    // animation.play()
-
     const { textures } = resources[Assets.WARRIOR_BLUE]
-    let counter = 0
 
-    const player = (
+    return (
       new ECSA.Builder(scene)
       .withAttribute(Attributes.GAME_UNIT, model.player)
       .globalPos(model.player.pos)
@@ -63,8 +55,5 @@ export default class GameFactory {
       .withParent(scene.findObjectByName(Names.LAYER_CHARACTERS))
       .build()
     )
-
-    // player.addChild(animation)
-    // player.removeChild(animation)
   }
 }

@@ -10,6 +10,7 @@ export default class GameUnit {
   dir = Direction.UP
   state = UnitState.STANDING
   speed = 150
+  actionStart = 0
 
   constructor(pos: ECSA.Vector) {
     this.id = GameUnit.idCounter++
