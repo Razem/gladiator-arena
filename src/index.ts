@@ -1,6 +1,7 @@
 import * as ECSA from '../libs/pixi-component'
 import { Assets } from './constants'
 import GameFactory from './game-factory'
+import GameModel from './game-model'
 
 class Game {
   engine: ECSA.GameLoop
@@ -32,14 +33,15 @@ class Game {
   }
 
   onAssetsLoaded() {
-    // init the scene and run your game
     const {
       scene,
       app: { loader: { resources } },
     } = this.engine
 
     const factory = new GameFactory()
-    factory.initialize(scene)
+    const model = new GameModel()
+
+    factory.initialize(scene, model, resources)
 
     // new ECSA.Builder(scene)
     // .localPos(this.engine.app.screen.width / 2, this.engine.app.screen.height / 2)
