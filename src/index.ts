@@ -1,5 +1,5 @@
 import * as ECSA from '../libs/pixi-component'
-import { Assets } from './constants'
+import { Assets, Info } from './constants'
 import GameFactory from './game-factory'
 import GameModel from './game-model'
 
@@ -11,7 +11,7 @@ class Game {
     const canvas = document.getElementById('gameCanvas') as HTMLCanvasElement
 
     // init the game loop
-    this.engine.init(canvas, 1920, 1080, 1, {
+    this.engine.init(canvas, Info.WIDTH, Info.HEIGHT, 1, {
       flagsSearchEnabled: false, // searching by flags feature
       statesSearchEnabled: false, // searching by states feature
       tagsSearchEnabled: false, // searching by tags feature

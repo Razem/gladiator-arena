@@ -1,5 +1,5 @@
 import * as ECSA from '../libs/pixi-component'
-import { Assets, Attributes, Names, UnitState } from './constants'
+import { Assets, Attributes, Names, UnitState, Info } from './constants'
 import GameModel from './game-model'
 import { PlayerKeyController } from './components/player-controller'
 import GameUnit from './game-unit'
@@ -14,6 +14,8 @@ export default class GameFactory {
     scene.assignGlobalAttribute(Attributes.MODEL, model)
 
     scene.addGlobalComponent(new ECSA.KeyInputComponent())
+
+    console.log(scene.stage.width)
 
     const builder = new ECSA.Builder(scene)
 
@@ -52,23 +54,11 @@ export default class GameFactory {
       new ECSA.Builder(scene)
       .withAttribute(Attributes.GAME_UNIT, model.player)
       .globalPos(model.player.pos)
-      // .asContainer(Names.WARRIOR_BLUE)
-      .withComponent(new PlayerKeyController())
-      .asSprite(textures['warrior-blue-0'], Names.PLAYER)
-      .withComponent(
-        new ECSA.GenericComponent('animator')
-        .setFrequency(10)
-        .doOnUpdate((cmp, delta, absolute) => {
-          const unit = cmp.owner.getAttribute(Attributes.GAME_UNIT) as GameUnit
-          if (unit.state === UnitState.STANDING) {
-            cmp.owner.asSprite().texture = textures['warrior-blue-6']
-          }
-          else if (unit.state === UnitState.WALKING) {
-            cmp.owner.asSprite().texture = textures['warrior-blue-' + (counter % 6)]
-          }
-          cmp.owner.asSprite().rotation = 2 * Math.PI * unit.dir / 8
-          counter += 1
-        })
+      .anchor(...Info.Warrior.ANCHOR)
+      .withComponent(new PlayerKeyController(textures, Assets.WARRIOR_BLUE_FRAME_PREFIX))
+      .asSprite(
+        textures[Assets.WARRIOR_BLUE_FRAME_PREFIX + Info.Warrior.DEFAULT_FRAME],
+        Names.PLAYER
       )
       .withParent(scene.findObjectByName(Names.LAYER_CHARACTERS))
       .build()

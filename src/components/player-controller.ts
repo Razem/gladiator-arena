@@ -1,10 +1,14 @@
 import * as ECSA from '../../libs/pixi-component'
 import BaseComponent from './base-component'
-import { Attributes, UnitState, GameState, Messages } from '../constants'
+import { Attributes, UnitState, GameState, Messages, Info } from '../constants'
 import GameUnit from '../game-unit'
 import { Direction, directionVectors } from '../direction'
 
 export class PlayerController extends BaseComponent {
+  constructor(private textures: PIXI.ITextureDictionary, private framePrefix: string) {
+    super()
+  }
+
   get unit() {
     return this.owner.getAttribute(Attributes.GAME_UNIT) as GameUnit
   }
@@ -18,28 +22,43 @@ export class PlayerController extends BaseComponent {
 
   }
 
-  protected followDirection(direction: Direction, delta: number): boolean {
+  onUpdate(delta: number, absolute: number) {
     if (this.model.state !== GameState.DEFAULT) {
-      return false
+      return
     }
 
-    this.unit.dir = direction
+    const { textures, framePrefix, unit } = this
+    const owner = this.owner.asSprite()
 
-    const newPos = this.unit.pos.add(
-      directionVectors[direction]
-      .multiply(delta / 1000)
-      .multiply(this.unit.speed)
-    )
-
-    if (newPos.x < 0 || newPos.x >= 1920 || newPos.y < 0 || newPos.y >= 1080) {
-      return false
+    owner.anchor.set(...Info.Warrior.ANCHOR)
+    if (unit.state === UnitState.STANDING) {
+      owner.texture = textures[framePrefix + Info.Warrior.ATTACK_FRAME]
+      owner.anchor.set(...Info.Warrior.ATTACK_ANCHOR)
+    }
+    else if (unit.state === UnitState.WALKING) {
+      const duration = 500
+      const frame = Math.floor((absolute % duration) / (duration / Info.Warrior.FRAMES))
+      owner.texture = textures[framePrefix + frame]
     }
 
-    this.unit.state = UnitState.WALKING
-    this.unit.pos = newPos
+    owner.rotation = 2 * Math.PI * unit.dir / 8
 
-    this.owner.position.x = newPos.x
-    this.owner.position.y = newPos.y
+    if (this.unit.state === UnitState.WALKING) {
+      const newPos = this.unit.pos.add(
+        directionVectors[unit.dir]
+        .multiply(delta / 1000)
+        .multiply(this.unit.speed)
+      )
+
+      if (newPos.x < 0 || newPos.x >= Info.WIDTH || newPos.y < 0 || newPos.y >= Info.HEIGHT) {
+        return
+      }
+
+      this.unit.pos = newPos
+
+      this.owner.position.x = newPos.x
+      this.owner.position.y = newPos.y
+    }
 
     // let newPos = new ECSA.Vector(x, y);
     // this.unit.state = UnitState.WALKING;
@@ -70,8 +89,6 @@ export class PlayerController extends BaseComponent {
     //       }
     //     }
     //   }), true);
-
-    return true
   }
 
   private confirmPositionChange(direction: Direction) {
@@ -110,7 +127,7 @@ export class PlayerKeyController extends PlayerController {
     const state = this.unit.state
 
     if (state === UnitState.STANDING || state === UnitState.WALKING) {
-      this.unit.state = UnitState.STANDING
+      this.unit.state = UnitState.WALKING
 
       const up = cmpKey.isKeyPressed(ECSA.Keys.KEY_UP)
       const right = cmpKey.isKeyPressed(ECSA.Keys.KEY_RIGHT)
@@ -118,29 +135,34 @@ export class PlayerKeyController extends PlayerController {
       const left = cmpKey.isKeyPressed(ECSA.Keys.KEY_LEFT)
 
       if (up && right) {
-        this.followDirection(Direction.UP_RIGHT, delta)
+        this.unit.dir = Direction.UP_RIGHT
       }
       else if (down && right) {
-        this.followDirection(Direction.DOWN_RIGHT, delta)
+        this.unit.dir = Direction.DOWN_RIGHT
       }
       else if (down && left) {
-        this.followDirection(Direction.DOWN_LEFT, delta)
+        this.unit.dir = Direction.DOWN_LEFT
       }
       else if (up && left) {
-        this.followDirection(Direction.UP_LEFT, delta)
+        this.unit.dir = Direction.UP_LEFT
       }
       else if (left) {
-        this.followDirection(Direction.LEFT, delta)
+        this.unit.dir = Direction.LEFT
       }
       else if (right) {
-        this.followDirection(Direction.RIGHT, delta)
+        this.unit.dir = Direction.RIGHT
       }
       else if (up) {
-        this.followDirection(Direction.UP, delta)
+        this.unit.dir = Direction.UP
       }
       else if (down) {
-        this.followDirection(Direction.DOWN, delta)
+        this.unit.dir = Direction.DOWN
+      }
+      else {
+        this.unit.state = UnitState.STANDING
       }
     }
+
+    super.onUpdate(delta, absolute)
   }
 }
