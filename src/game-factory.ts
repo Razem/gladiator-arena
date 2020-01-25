@@ -15,8 +15,6 @@ export default class GameFactory {
 
     scene.addGlobalComponent(new ECSA.KeyInputComponent())
 
-    console.log(scene.stage.width)
-
     const builder = new ECSA.Builder(scene)
 
     const backgroundLayer = (
@@ -28,6 +26,11 @@ export default class GameFactory {
 
     builder
     .withParent(scene.stage)
+    .asContainer(Names.LAYER_ENVIRONMENT)
+    .build()
+
+    builder
+    .withParent(scene.stage)
     .asContainer(Names.LAYER_CHARACTERS)
     .build()
 
@@ -36,7 +39,23 @@ export default class GameFactory {
     .withParent(backgroundLayer)
     .build()
 
+    this.spawnObstacles(scene, model)
+
     this.spawnPlayer(scene, model, resources)
+  }
+
+  spawnObstacles(scene: ECSA.Scene, model: GameModel) {
+    for (const obstacle of model.obstacles) {
+      new ECSA.Builder(scene)
+      .globalPos(obstacle.x, obstacle.y)
+      .asTilingSprite(
+        PIXI.Texture.from(Assets.OBSTACLE),
+        obstacle.width,
+        obstacle.height
+      )
+      .withParent(scene.findObjectByName(Names.LAYER_ENVIRONMENT))
+      .build()
+    }
   }
 
   spawnPlayer(scene: ECSA.Scene, model: GameModel, resources: PIXI.IResourceDictionary) {

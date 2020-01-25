@@ -15,6 +15,7 @@ export enum Attributes {
 
 export enum Names {
   LAYER_BACKGROUND = 'layer_background',
+  LAYER_ENVIRONMENT = 'layer_environments',
   LAYER_CHARACTERS = 'layer_characters',
   BACKGROUND = 'background',
   PLAYER = 'player',

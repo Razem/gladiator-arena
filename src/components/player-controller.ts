@@ -31,7 +31,7 @@ export class PlayerController extends BaseComponent {
     const owner = this.owner.asSprite()
 
     if (unit.state === UnitState.ATTACKING) {
-      if (unit.actionStart + Info.Warrior.ATTACK_COOLDOWN < absolute) {
+      if (unit.actionEnd < absolute) {
         unit.state = UnitState.STANDING
       }
       else {
@@ -54,14 +54,26 @@ export class PlayerController extends BaseComponent {
     owner.rotation = 2 * Math.PI * unit.dir / 8
 
     if (this.unit.state === UnitState.WALKING) {
-      const newPos = this.unit.pos.add(
+      let newPos = unit.pos.add(
         directionVectors[unit.dir]
         .multiply(delta / 1000)
         .multiply(this.unit.speed)
       )
 
-      if (newPos.x < 0 || newPos.x >= Info.WIDTH || newPos.y < 0 || newPos.y >= Info.HEIGHT) {
-        return
+      if (!this.model.canGo(newPos)) {
+        let altPos = new ECSA.Vector(newPos.x, unit.pos.y)
+        if (this.model.canGo(altPos)) {
+          newPos = altPos
+        }
+        else {
+          altPos = new ECSA.Vector(unit.pos.x, newPos.y)
+          if (this.model.canGo(altPos)) {
+            newPos = altPos
+          }
+          else {
+            return
+          }
+        }
       }
 
       this.unit.pos = newPos
@@ -83,7 +95,7 @@ export class PlayerKeyController extends PlayerController {
     if (state === UnitState.STANDING || state === UnitState.WALKING) {
       if (cmpKey.isKeyPressed(ECSA.Keys.KEY_SPACE)) {
         this.unit.state = UnitState.ATTACKING
-        this.unit.actionStart = absolute
+        this.unit.actionEnd = absolute + Info.Warrior.ATTACK_COOLDOWN
       }
       else {
         this.unit.state = UnitState.WALKING
