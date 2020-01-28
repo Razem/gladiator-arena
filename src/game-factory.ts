@@ -203,7 +203,7 @@ export default class GameFactory {
       .withComponent(new Healthbar())
       .asSprite(
         textures[Assets.WARRIOR_RED_FRAME_PREFIX + Info.Warrior.DEFAULT_FRAME],
-        Names.PLAYER
+        Names.ENEMY + enemy.id
       )
       .withParent(scene.findObjectByName(Names.LAYER_CHARACTERS))
       .build()

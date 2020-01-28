@@ -119,4 +119,20 @@ export default class GameModel {
 
     return null
   }
+
+  killUnit(unit: GameUnit) {
+    if (this.player === unit) {
+      return GameState.DEFEAT
+    }
+
+    const index = this.enemies.findIndex(u => u === unit)
+    if (index !== -1) {
+      this.enemies.splice(index, 1)
+      if (this.enemies.length === 0) {
+        return GameState.VICTORY
+      }
+    }
+
+    return GameState.GAME
+  }
 }

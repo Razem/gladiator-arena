@@ -48,12 +48,28 @@ export default class GameController extends BaseComponent {
   }
 
   performAttack(unitId: number) {
-    const { model } = this
+    const { model, factory, scene } = this
 
     const unit = model.getUnitById(unitId)
     if (!unit) return
 
-    model.performAttack(unit)
+    const target = model.performAttack(unit)
+    if (target) {
+      if (target.health === 0) {
+        const state = model.killUnit(target)
+        if (state === GameState.VICTORY || state === GameState.DEFEAT) {
+          model.state = state
+          scene.invokeWithDelay(0, () => factory.initialize())
+        }
+        else {
+          scene
+          .findObjectByName(Names.LAYER_CHARACTERS)
+          .removeChild(
+            scene.findObjectByName(Names.ENEMY + target.id)
+          )
+        }
+      }
+    }
   }
 
   onMessage(msg: ECSA.Message) {
