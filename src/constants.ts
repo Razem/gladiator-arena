@@ -33,7 +33,9 @@ export enum UnitState {
 
 export enum GameState {
   DEFAULT = 0,
-  GAME_OVER = 1,
+  GAME = 1,
+  VICTORY = 2,
+  DEFEAT = 3,
 }
 
 export enum BonusType {

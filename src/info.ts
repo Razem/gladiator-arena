@@ -21,7 +21,9 @@ export module Warrior {
 
 export module Bonus {
   export const RADIUS = 20
-  export const OPACITY = 0.7
+  export const INNER_RADIUS = 15
+  export const OPACITY = 0.3
+  export const INNER_OPACITY = 0.4
 
   export const MAX_AMOUNT = 10
 

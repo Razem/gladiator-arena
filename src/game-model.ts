@@ -7,14 +7,15 @@ import { randomInt } from './utils/random'
 import * as Info from './info'
 
 export default class GameModel {
-  state: GameState
+  state = GameState.DEFAULT
+
   player: GameUnit
   enemies: GameUnit[]
   obstacles: Rectangle[]
   bonuses: GameBonus[]
 
   initialize() {
-    this.state = GameState.DEFAULT
+    this.state = GameState.GAME
     this.player = new GameUnit(new ECSA.Vector(100, 100))
     this.enemies = [
       new GameUnit(new ECSA.Vector(Info.WIDTH - 100, 100)),

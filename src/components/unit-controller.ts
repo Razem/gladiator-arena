@@ -24,7 +24,7 @@ export default class UnitController extends BaseComponent {
   }
 
   onUpdate(delta: number, absolute: number) {
-    if (this.model.state !== GameState.DEFAULT) {
+    if (this.model.state !== GameState.GAME) {
       return
     }
 

@@ -92,6 +92,9 @@ export default class GameController extends BaseComponent {
       .beginFill(Info.Bonus.colors[bonus.type], Info.Bonus.OPACITY)
       .drawCircle(0, 0, Info.Bonus.RADIUS)
       .endFill()
+      .beginFill(Info.Bonus.colors[bonus.type], Info.Bonus.INNER_OPACITY)
+      .drawCircle(0, 0, Info.Bonus.INNER_RADIUS)
+      .endFill()
     }
   }
 }
