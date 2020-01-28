@@ -8,10 +8,11 @@ export default class GameUnit {
 
   id: number
   pos: ECSA.Vector
+  radius = Info.Warrior.RADIUS
   dir = Direction.UP
   state = UnitState.STANDING
   speed = Info.Warrior.SPEED
-  radius = Info.Warrior.RADIUS
+  health = 100
   attackCooldown = Info.Warrior.ATTACK_COOLDOWN
   attackEndsAt = 0
 

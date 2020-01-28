@@ -7,6 +7,7 @@ import { Direction } from './direction'
 import * as Info from './info'
 import GameController from './components/game-controller'
 import MenuController from './components/menu-controller'
+import Healthbar from './components/healthbar'
 
 export default class GameFactory {
   constructor(
@@ -179,6 +180,7 @@ export default class GameFactory {
       .globalPos(model.player.pos)
       .anchor(...Info.Warrior.ANCHOR)
       .withComponent(new PlayerController(textures, Assets.WARRIOR_BLUE_FRAME_PREFIX))
+      .withComponent(new Healthbar())
       .asSprite(
         textures[Assets.WARRIOR_BLUE_FRAME_PREFIX + Info.Warrior.DEFAULT_FRAME],
         Names.PLAYER
@@ -198,6 +200,7 @@ export default class GameFactory {
       .globalPos(enemy.pos)
       .anchor(...Info.Warrior.ANCHOR)
       // .withComponent(new PlayerKeyController(textures, Assets.WARRIOR_RED_FRAME_PREFIX))
+      .withComponent(new Healthbar())
       .asSprite(
         textures[Assets.WARRIOR_RED_FRAME_PREFIX + Info.Warrior.DEFAULT_FRAME],
         Names.PLAYER
