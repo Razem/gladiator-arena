@@ -21,3 +21,7 @@ export const directionVectors = {
   [Direction.LEFT]: new ECSA.Vector(-1, 0),
   [Direction.UP_LEFT]: new ECSA.Vector(-Math.SQRT1_2, -Math.SQRT1_2),
 }
+
+export function directionAngle(dir: Direction) {
+  return Math.PI * dir / 4
+}
