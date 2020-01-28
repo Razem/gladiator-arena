@@ -1,5 +1,6 @@
 import * as ECSA from '../libs/pixi-component'
 import GameUnit from './game-unit'
+import GameBonus from './game-bonus'
 import { GameState } from './constants'
 import { Rectangle, Circle, testCircleRectangleCollision } from './utils/collisions'
 import Random from '../libs/pixi-math/math/random'
@@ -9,6 +10,7 @@ export default class GameModel {
   state: GameState
   player: GameUnit
   obstacles: Rectangle[]
+  bonuses: GameBonus[]
 
   initialize() {
     this.state = GameState.DEFAULT
@@ -20,14 +22,15 @@ export default class GameModel {
       this.obstacles.push(new Rectangle(
         rnd.uniformInt(30, Info.WIDTH - 230),
         rnd.uniformInt(30, Info.HEIGHT - 230),
-        rnd.uniformInt(10, 200),
-        rnd.uniformInt(10, 200)
+        rnd.uniformInt(100, 200),
+        rnd.uniformInt(100, 200)
       ))
     }
+
+    this.bonuses = []
   }
 
-  canGo(pos: ECSA.Vector) {
-    const radius = 30
+  isValidPoisition(pos: ECSA.Vector, radius: number) {
     if (
       pos.x < radius
       || pos.x >= Info.WIDTH - radius

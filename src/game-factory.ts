@@ -5,6 +5,7 @@ import { PlayerKeyController } from './components/player-controller'
 import GameUnit from './game-unit'
 import { Direction } from './direction'
 import * as Info from './info'
+import GameController from './components/game-controller'
 
 export default class GameFactory {
   initialize(scene: ECSA.Scene, model: GameModel, resources: PIXI.IResourceDictionary) {
@@ -15,6 +16,7 @@ export default class GameFactory {
     scene.assignGlobalAttribute(Attributes.MODEL, model)
 
     scene.addGlobalComponent(new ECSA.KeyInputComponent())
+    scene.addGlobalComponent(new GameController())
 
     const builder = new ECSA.Builder(scene)
 
@@ -28,6 +30,11 @@ export default class GameFactory {
     builder
     .withParent(scene.stage)
     .asContainer(Names.LAYER_ENVIRONMENT)
+    .build()
+
+    builder
+    .withParent(scene.stage)
+    .asContainer(Names.LAYER_BONUSES)
     .build()
 
     builder

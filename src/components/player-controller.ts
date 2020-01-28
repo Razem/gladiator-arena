@@ -61,14 +61,14 @@ export class PlayerController extends BaseComponent {
         .multiply(this.unit.speed)
       )
 
-      if (!this.model.canGo(newPos)) {
+      if (!this.model.isValidPoisition(newPos, unit.radius)) {
         let altPos = new ECSA.Vector(newPos.x, unit.pos.y)
-        if (this.model.canGo(altPos)) {
+        if (this.model.isValidPoisition(altPos, unit.radius)) {
           newPos = altPos
         }
         else {
           altPos = new ECSA.Vector(unit.pos.x, newPos.y)
-          if (this.model.canGo(altPos)) {
+          if (this.model.isValidPoisition(altPos, unit.radius)) {
             newPos = altPos
           }
           else {
