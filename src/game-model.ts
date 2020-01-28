@@ -1,8 +1,9 @@
 import * as ECSA from '../libs/pixi-component'
 import GameUnit from './game-unit'
-import { GameState, Info } from './constants'
+import { GameState } from './constants'
 import { Rectangle, Circle, testCircleRectangleCollision } from './utils/collisions'
 import Random from '../libs/pixi-math/math/random'
+import * as Info from './info'
 
 export default class GameModel {
   state: GameState

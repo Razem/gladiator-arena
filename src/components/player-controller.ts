@@ -1,8 +1,9 @@
 import * as ECSA from '../../libs/pixi-component'
 import BaseComponent from './base-component'
-import { Attributes, UnitState, GameState, Messages, Info } from '../constants'
+import { Attributes, UnitState, GameState, Messages } from '../constants'
 import GameUnit from '../game-unit'
 import { Direction, directionVectors } from '../direction'
+import * as Info from '../info'
 
 export class PlayerController extends BaseComponent {
   constructor(private textures: PIXI.ITextureDictionary, private framePrefix: string) {

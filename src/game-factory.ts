@@ -1,9 +1,10 @@
 import * as ECSA from '../libs/pixi-component'
-import { Assets, Attributes, Names, UnitState, Info } from './constants'
+import { Assets, Attributes, Names, UnitState } from './constants'
 import GameModel from './game-model'
 import { PlayerKeyController } from './components/player-controller'
 import GameUnit from './game-unit'
 import { Direction } from './direction'
+import * as Info from './info'
 
 export default class GameFactory {
   initialize(scene: ECSA.Scene, model: GameModel, resources: PIXI.IResourceDictionary) {

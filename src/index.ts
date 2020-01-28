@@ -1,7 +1,8 @@
 import * as ECSA from '../libs/pixi-component'
-import { Assets, Info } from './constants'
+import { Assets } from './constants'
 import GameFactory from './game-factory'
 import GameModel from './game-model'
+import * as Info from './info'
 
 class Game {
   engine: ECSA.GameLoop
