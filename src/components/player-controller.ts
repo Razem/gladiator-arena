@@ -28,11 +28,15 @@ export class PlayerController extends BaseComponent {
       return
     }
 
-    const { textures, framePrefix, unit } = this
+    const { textures, framePrefix, unit, model } = this
     const owner = this.owner.asSprite()
 
+    if (unit.activeBonus !== null && unit.bonusEndsAt < absolute) {
+      unit.deactivateBonus()
+    }
+
     if (unit.state === UnitState.ATTACKING) {
-      if (unit.actionEnd < absolute) {
+      if (unit.actionEndsAt < absolute) {
         unit.state = UnitState.STANDING
       }
       else {
@@ -54,21 +58,21 @@ export class PlayerController extends BaseComponent {
 
     owner.rotation = directionAngle(unit.dir)
 
-    if (this.unit.state === UnitState.WALKING) {
+    if (unit.state === UnitState.WALKING) {
       let newPos = unit.pos.add(
         directionVectors[unit.dir]
         .multiply(delta / 1000)
-        .multiply(this.unit.speed)
+        .multiply(unit.speed)
       )
 
-      if (!this.model.isValidPoisition(newPos, unit.radius)) {
+      if (!model.isValidPoisition(newPos, unit.radius)) {
         let altPos = new ECSA.Vector(newPos.x, unit.pos.y)
-        if (this.model.isValidPoisition(altPos, unit.radius)) {
+        if (model.isValidPoisition(altPos, unit.radius)) {
           newPos = altPos
         }
         else {
           altPos = new ECSA.Vector(unit.pos.x, newPos.y)
-          if (this.model.isValidPoisition(altPos, unit.radius)) {
+          if (model.isValidPoisition(altPos, unit.radius)) {
             newPos = altPos
           }
           else {
@@ -77,10 +81,19 @@ export class PlayerController extends BaseComponent {
         }
       }
 
-      this.unit.pos = newPos
+      unit.pos = newPos
 
-      this.owner.position.x = newPos.x
-      this.owner.position.y = newPos.y
+      owner.position.x = newPos.x
+      owner.position.y = newPos.y
+    }
+
+    const bonus = model.getCollidingBonus(unit.pos, unit.radius)
+    if (bonus !== null) {
+      unit.activateBonus(bonus.type, absolute)
+      this.sendMessage(Messages.BONUS_TAKEN, {
+        bonusId: bonus.id,
+        unitId: unit.id,
+      })
     }
   }
 }
@@ -96,7 +109,7 @@ export class PlayerKeyController extends PlayerController {
     if (state === UnitState.STANDING || state === UnitState.WALKING) {
       if (cmpKey.isKeyPressed(ECSA.Keys.KEY_SPACE)) {
         this.unit.state = UnitState.ATTACKING
-        this.unit.actionEnd = absolute + Info.Warrior.ATTACK_COOLDOWN
+        this.unit.actionEndsAt = absolute + Info.Warrior.ATTACK_COOLDOWN
       }
       else {
         this.unit.state = UnitState.WALKING

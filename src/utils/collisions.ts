@@ -37,3 +37,10 @@ export function testCircleRectangleCollision(c: Circle, r: Rectangle) {
   const distance = Math.sqrt(distX * distX + distY * distY)
   return distance < c.radius
 }
+
+export function testCircleCircleCollision(c1: Circle, c2: Circle) {
+  const distX = c1.x - c2.x
+  const distY = c1.y - c2.y
+  const distance = Math.sqrt(distX * distX + distY * distY)
+  return distance < (c1.radius + c2.radius)
+}

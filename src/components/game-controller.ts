@@ -16,13 +16,39 @@ export default class GameController extends BaseComponent {
     this.rnd = new Random(Date.now())
   }
 
+  bonusComponents: ECSA.Container[]
+
   onInit() {
     super.onInit()
-    // this.subscribe(Messages.)
+    this.subscribe(Messages.BONUS_TAKEN)
+    this.bonusComponents = []
   }
 
   onMessage(msg: ECSA.Message) {
+    const { scene, model, bonusComponents } = this
 
+    switch (msg.action) {
+      case Messages.BONUS_TAKEN:
+        const bonusId = msg.data.bonusId as number
+
+        // Remove component
+        const bonusComponentIndex = (
+          bonusComponents
+          .findIndex(b => (
+            (b.getAttribute(Attributes.GAME_BONUS) as GameBonus).id === bonusId
+          ))
+        )
+        scene
+        .findObjectByName(Names.LAYER_BONUSES)
+        .removeChild(bonusComponents[bonusComponentIndex])
+        bonusComponents.splice(bonusComponentIndex, 1)
+
+        // Remove actual bonus object
+        const bonusIndex = model.bonuses.findIndex(b => b.id = bonusId)
+        model.bonuses.splice(bonusIndex, 1)
+
+        break
+    }
   }
 
   onUpdate(delta: number, absolute: number) {
@@ -49,14 +75,20 @@ export default class GameController extends BaseComponent {
 
       model.bonuses.push(bonus)
 
-      new ECSA.Builder(scene)
-      .withAttribute(Attributes.GAME_BONUS, bonus)
-      .globalPos(pos)
-      .anchor(...Info.Warrior.ANCHOR)
-      .asGraphics()
-      .withParent(scene.findObjectByName(Names.LAYER_BONUSES))
-      .build()
-      .asGraphics()
+      const comp = (
+        new ECSA.Builder(scene)
+        .withAttribute(Attributes.GAME_BONUS, bonus)
+        .globalPos(pos)
+        .anchor(...Info.Warrior.ANCHOR)
+        .asGraphics()
+        .withParent(scene.findObjectByName(Names.LAYER_BONUSES))
+        .build()
+        .asGraphics()
+      )
+
+      this.bonusComponents.push(comp)
+
+      comp
       .beginFill(0x00ff00, 0.5)
       .drawCircle(0, 0, Info.Bonus.RADIUS)
       .endFill()

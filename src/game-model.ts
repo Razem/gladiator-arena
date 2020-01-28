@@ -2,7 +2,7 @@ import * as ECSA from '../libs/pixi-component'
 import GameUnit from './game-unit'
 import GameBonus from './game-bonus'
 import { GameState } from './constants'
-import { Rectangle, Circle, testCircleRectangleCollision } from './utils/collisions'
+import { Rectangle, Circle, testCircleRectangleCollision, testCircleCircleCollision } from './utils/collisions'
 import Random from '../libs/pixi-math/math/random'
 import * as Info from './info'
 
@@ -42,5 +42,14 @@ export default class GameModel {
 
     const c = new Circle(pos.x, pos.y, radius)
     return !this.obstacles.some(r => testCircleRectangleCollision(c, r))
+  }
+
+  getCollidingBonus(pos: ECSA.Vector, radius: number) {
+    const c = new Circle(pos.x, pos.y, radius)
+    const bonus = this.bonuses.find(b => testCircleCircleCollision(
+      new Circle(b.pos.x, b.pos.y, b.radius),
+      c
+    ))
+    return bonus || null
   }
 }
