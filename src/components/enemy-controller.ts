@@ -18,11 +18,17 @@ export default class EnemyController extends UnitController {
       unit.pos.x, unit.pos.y,
       model.player.pos.x, model.player.pos.y
     )
-    if (dist < Info.Warrior.ATTACK_DISTANCE) {
-      if (unit.attack(absolute)) {
-        this.sendMessage(Messages.UNIT_ATTACKED, {
-          unitId: unit.id,
-        })
+
+    if (unit.state === UnitState.STANDING || unit.state === UnitState.WALKING) {
+      if (dist < Info.Warrior.ATTACK_DISTANCE) {
+        if (unit.attack(absolute)) {
+          this.sendMessage(Messages.UNIT_ATTACKED, {
+            unitId: unit.id,
+          })
+        }
+      }
+      else {
+        unit.state = UnitState.WALKING
       }
     }
 
