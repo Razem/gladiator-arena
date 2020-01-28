@@ -41,6 +41,7 @@ export enum GameState {
 export enum BonusType {
   SPEED_BOOST,
   FAST_ATTACK,
+  REGENERATION,
 }
 
 export enum Messages {

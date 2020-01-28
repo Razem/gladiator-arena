@@ -2,9 +2,10 @@ import * as ECSA from '../libs/pixi-component'
 import GameUnit from './game-unit'
 import GameBonus from './game-bonus'
 import { GameState } from './constants'
-import { Rectangle, Circle, testCircleRectangleCollision, testCircleCircleCollision } from './utils/collisions'
+import { Rectangle, Circle, testCircleRectangleCollision, testCircleCircleCollision, calculateDistance } from './utils/collisions'
 import { randomInt } from './utils/random'
 import * as Info from './info'
+import { directionAngle } from './direction'
 
 export default class GameModel {
   state = GameState.DEFAULT
@@ -80,5 +81,42 @@ export default class GameModel {
       c
     ))
     return bonus || null
+  }
+
+  performAttack(unit: GameUnit) {
+    const angle = directionAngle(unit.dir)
+    const others = this.getOtherUnits(unit)
+
+    others.sort((a, b) => {
+      const aDist = calculateDistance(unit.pos.x, unit.pos.y, a.pos.x, a.pos.y)
+      const bDist = calculateDistance(unit.pos.x, unit.pos.y, b.pos.x, b.pos.y)
+      return aDist - bDist
+    })
+
+    for (const u of others) {
+      const dist = calculateDistance(unit.pos.x, unit.pos.y, u.pos.x, u.pos.y)
+      if (dist >= Info.Warrior.ATTACK_DISTANCE) {
+        return null
+      }
+
+      // Yeah, I know this is weird, but this way it's aligned with the direction angle
+      let uAngle = Math.atan2(u.pos.x - unit.pos.x, unit.pos.y - u.pos.y)
+      uAngle += Math.PI * 2
+      uAngle %= Math.PI * 2
+
+      // Calculate angle difference
+      let diff = Math.abs(angle - uAngle)
+      if (diff > Math.PI) diff = Math.PI * 2 - diff
+
+      if (diff < Info.Warrior.ATTACK_ANGLE_DIFFERENCE) {
+        u.health = Math.max(
+          0,
+          u.health - randomInt(Info.Warrior.ATTACK_MIN, Info.Warrior.ATTACK_MAX + 1)
+        )
+        return u
+      }
+    }
+
+    return null
   }
 }

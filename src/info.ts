@@ -14,9 +14,16 @@ export module Warrior {
 
   export const ATTACK_COOLDOWN = 500
   export const BONUS_ATTACK_COOLDOWN = 100
+  export const ATTACK_DISTANCE = 150
+  export const ATTACK_ANGLE_DIFFERENCE = Math.PI * 0.25
+  export const ATTACK_MIN = 4
+  export const ATTACK_MAX = 6
 
   export const SPEED = 150
   export const BONUS_SPEED = 250
+
+  export const MAX_HEALTH = 100
+  export const BONUS_HEALTH = 25
 }
 
 export module Bonus {
@@ -30,9 +37,10 @@ export module Bonus {
   export const EFFECT_COOLDOWN = 10e3
   export const SPAWN_COOLDOWN = 5e3
 
-  export const TYPES = 2
+  export const TYPES = 3
   export const colors = {
     [BonusType.SPEED_BOOST]: 0xaa00aa,
     [BonusType.FAST_ATTACK]: 0xff0000,
+    [BonusType.REGENERATION]: 0x00cc00,
   }
 }

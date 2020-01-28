@@ -2,6 +2,7 @@ import * as ECSA from '../../libs/pixi-component'
 import BaseComponent from './base-component'
 import { Attributes } from '../constants'
 import GameUnit from '../game-unit'
+import * as Info from '../info'
 
 export default class Healtbar extends BaseComponent {
   get unit() {
@@ -35,7 +36,7 @@ export default class Healtbar extends BaseComponent {
 
     graphics.position.set(unit.pos.x - width / 2, unit.pos.y - 60)
 
-    const health = unit.health / 100 * width
+    const health = unit.health / Info.Warrior.MAX_HEALTH * width
 
     graphics
     .clear()

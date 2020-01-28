@@ -12,7 +12,7 @@ export default class GameUnit {
   dir = Direction.UP
   state = UnitState.STANDING
   speed = Info.Warrior.SPEED
-  health = 100
+  health = Info.Warrior.MAX_HEALTH
   attackCooldown = Info.Warrior.ATTACK_COOLDOWN
   attackEndsAt = 0
 
@@ -52,6 +52,18 @@ export default class GameUnit {
       case BonusType.FAST_ATTACK:
         this.attackCooldown = Info.Warrior.BONUS_ATTACK_COOLDOWN
         break
+      case BonusType.REGENERATION:
+        this.health = Math.min(Info.Warrior.MAX_HEALTH, this.health + Info.Warrior.BONUS_HEALTH)
+        break
     }
+  }
+
+  attack(time: number) {
+    if (this.state === UnitState.STANDING || this.state === UnitState.WALKING) {
+      this.state = UnitState.ATTACKING
+      this.attackEndsAt = time + this.attackCooldown
+      return true
+    }
+    return false
   }
 }

@@ -15,6 +15,12 @@ export class Circle {
   ) {}
 }
 
+export function calculateDistance(x1: number, y1: number, x2: number, y2: number) {
+  const xDist = x1 - x2
+  const yDist = y1 - y2
+  return Math.sqrt(xDist * xDist + yDist * yDist)
+}
+
 // Source: http://www.jeffreythompson.org/collision-detection/circle-rect.php
 export function testCircleRectangleCollision(c: Circle, r: Rectangle) {
   let testX = c.x
@@ -32,15 +38,9 @@ export function testCircleRectangleCollision(c: Circle, r: Rectangle) {
     testY = r.y + r.height
   }
 
-  const distX = c.x - testX
-  const distY = c.y - testY
-  const distance = Math.sqrt(distX * distX + distY * distY)
-  return distance < c.radius
+  return calculateDistance(c.x, c.y, testX, testY) < c.radius
 }
 
 export function testCircleCircleCollision(c1: Circle, c2: Circle) {
-  const distX = c1.x - c2.x
-  const distY = c1.y - c2.y
-  const distance = Math.sqrt(distX * distX + distY * distY)
-  return distance < (c1.radius + c2.radius)
+  return calculateDistance(c1.x, c1.y, c2.x, c2.y) < (c1.radius + c2.radius)
 }

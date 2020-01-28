@@ -13,7 +13,7 @@ export default class GameController extends BaseComponent {
 
   onInit() {
     super.onInit()
-    this.subscribe(Messages.BONUS_TAKEN, Messages.BONUS_TAKEN)
+    this.subscribe(Messages.BONUS_TAKEN, Messages.UNIT_ATTACKED)
     this.bonusComponents = []
   }
 
@@ -47,6 +47,15 @@ export default class GameController extends BaseComponent {
     model.bonuses.splice(bonusIndex, 1)
   }
 
+  performAttack(unitId: number) {
+    const { model } = this
+
+    const unit = model.getUnitById(unitId)
+    if (!unit) return
+
+    model.performAttack(unit)
+  }
+
   onMessage(msg: ECSA.Message) {
     switch (msg.action) {
       case Messages.BONUS_TAKEN:
@@ -55,6 +64,9 @@ export default class GameController extends BaseComponent {
           msg.data.unitId as number,
           msg.data.time as number
         )
+        break
+      case Messages.UNIT_ATTACKED:
+        this.performAttack(msg.data.unitId as number)
         break
     }
   }

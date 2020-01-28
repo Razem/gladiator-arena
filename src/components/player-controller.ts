@@ -16,11 +16,11 @@ export default class PlayerKeyController extends UnitController {
 
     if (state === UnitState.STANDING || state === UnitState.WALKING) {
       if (cmpKey.isKeyPressed(ECSA.Keys.KEY_SPACE)) {
-        this.unit.state = UnitState.ATTACKING
-        this.unit.attackEndsAt = absolute + this.unit.attackCooldown
-        this.sendMessage(Messages.UNIT_ATTACKED, {
-          unitId: this.unit.id,
-        })
+        if (this.unit.attack(absolute)) {
+          this.sendMessage(Messages.UNIT_ATTACKED, {
+            unitId: this.unit.id,
+          })
+        }
       }
       else {
         this.unit.state = UnitState.WALKING
