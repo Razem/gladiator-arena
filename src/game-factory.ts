@@ -8,6 +8,7 @@ import * as Info from './info'
 import GameController from './components/game-controller'
 import MenuController from './components/menu-controller'
 import Healthbar from './components/healthbar'
+import EnemyController from './components/enemy-controller'
 
 export default class GameFactory {
   constructor(
@@ -199,7 +200,7 @@ export default class GameFactory {
       .withAttribute(Attributes.GAME_UNIT, enemy)
       .globalPos(enemy.pos)
       .anchor(...Info.Warrior.ANCHOR)
-      // .withComponent(new PlayerKeyController(textures, Assets.WARRIOR_RED_FRAME_PREFIX))
+      .withComponent(new EnemyController(textures, Assets.WARRIOR_RED_FRAME_PREFIX))
       .withComponent(new Healthbar())
       .asSprite(
         textures[Assets.WARRIOR_RED_FRAME_PREFIX + Info.Warrior.DEFAULT_FRAME],

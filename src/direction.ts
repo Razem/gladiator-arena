@@ -1,4 +1,5 @@
 import * as ECSA from '../libs/pixi-component'
+import GameUnit from './game-unit'
 
 export enum Direction {
   UP,
@@ -22,6 +23,18 @@ export const directionVectors = {
   [Direction.UP_LEFT]: new ECSA.Vector(-Math.SQRT1_2, -Math.SQRT1_2),
 }
 
-export function directionAngle(dir: Direction) {
+export function calculateAngleFromDirection(dir: Direction) {
   return Math.PI * dir / 4
+}
+
+export function calculateDirectionFromAngle(angle: number): Direction {
+  return Math.round(angle / (Math.PI / 4)) % 8
+}
+
+export function calculateUnitAngle(center: ECSA.Vector, target: ECSA.Vector) {
+  // Yeah, I know this is weird, but this way it's aligned with the direction angle
+  let uAngle = Math.atan2(target.x - center.x, center.y - target.y)
+  uAngle += Math.PI * 2
+  uAngle %= Math.PI * 2
+  return uAngle
 }

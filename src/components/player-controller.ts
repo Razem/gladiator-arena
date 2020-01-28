@@ -2,11 +2,11 @@ import * as ECSA from '../../libs/pixi-component'
 import BaseComponent from './base-component'
 import { Attributes, UnitState, GameState, Messages } from '../constants'
 import GameUnit from '../game-unit'
-import { Direction, directionVectors, directionAngle } from '../direction'
+import { Direction, directionVectors, calculateAngleFromDirection } from '../direction'
 import * as Info from '../info'
 import UnitController from './unit-controller'
 
-export default class PlayerKeyController extends UnitController {
+export default class PlayerController extends UnitController {
   onUpdate(delta: number, absolute: number) {
     const cmp = this.scene.stage.findComponentByName<ECSA.KeyInputComponent>(
       ECSA.KeyInputComponent.name

@@ -2,7 +2,7 @@ import * as ECSA from '../../libs/pixi-component'
 import BaseComponent from './base-component'
 import { Attributes, UnitState, GameState, Messages } from '../constants'
 import GameUnit from '../game-unit'
-import { Direction, directionVectors, directionAngle } from '../direction'
+import { Direction, directionVectors, calculateAngleFromDirection } from '../direction'
 import * as Info from '../info'
 
 export default class UnitController extends BaseComponent {
@@ -54,7 +54,7 @@ export default class UnitController extends BaseComponent {
       owner.anchor.set(...Info.Warrior.ANCHOR)
     }
 
-    owner.rotation = directionAngle(unit.dir)
+    owner.rotation = calculateAngleFromDirection(unit.dir)
 
     if (unit.state === UnitState.WALKING) {
       let newPos = unit.pos.add(

@@ -5,7 +5,7 @@ import { GameState } from './constants'
 import { Rectangle, Circle, testCircleRectangleCollision, testCircleCircleCollision, calculateDistance } from './utils/collisions'
 import { randomInt } from './utils/random'
 import * as Info from './info'
-import { directionAngle } from './direction'
+import { calculateAngleFromDirection, calculateUnitAngle } from './direction'
 
 export default class GameModel {
   state = GameState.DEFAULT
@@ -84,7 +84,7 @@ export default class GameModel {
   }
 
   performAttack(unit: GameUnit) {
-    const angle = directionAngle(unit.dir)
+    const angle = calculateAngleFromDirection(unit.dir)
     const others = this.getOtherUnits(unit)
 
     others.sort((a, b) => {
@@ -99,12 +99,8 @@ export default class GameModel {
         return null
       }
 
-      // Yeah, I know this is weird, but this way it's aligned with the direction angle
-      let uAngle = Math.atan2(u.pos.x - unit.pos.x, unit.pos.y - u.pos.y)
-      uAngle += Math.PI * 2
-      uAngle %= Math.PI * 2
-
       // Calculate angle difference
+      const uAngle = calculateUnitAngle(unit.pos, u.pos)
       let diff = Math.abs(angle - uAngle)
       if (diff > Math.PI) diff = Math.PI * 2 - diff
 
