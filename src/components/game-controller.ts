@@ -75,7 +75,7 @@ export default class GameController extends BaseComponent {
         )
       } while (!model.isValidPoisition(pos, Info.Bonus.RADIUS))
 
-      const bonus = new GameBonus(pos, BonusType.SPEED_BOOST)
+      const bonus = new GameBonus(pos, rnd.uniformInt(0, Info.Bonus.TYPES - 1))
 
       model.bonuses.push(bonus)
 
@@ -93,7 +93,7 @@ export default class GameController extends BaseComponent {
       this.bonusComponents.push(comp)
 
       comp
-      .beginFill(0x00ff00, 0.5)
+      .beginFill(Info.Bonus.colors[bonus.type], Info.Bonus.OPACITY)
       .drawCircle(0, 0, Info.Bonus.RADIUS)
       .endFill()
     }

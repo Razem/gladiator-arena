@@ -1,3 +1,5 @@
+import { BonusType } from './constants'
+
 export const WIDTH = 1920
 export const HEIGHT = 1080
 
@@ -11,6 +13,7 @@ export module Warrior {
   export const ATTACK_FRAME = 6
 
   export const ATTACK_COOLDOWN = 500
+  export const BONUS_ATTACK_COOLDOWN = 100
 
   export const SPEED = 150
   export const BONUS_SPEED = 250
@@ -18,9 +21,16 @@ export module Warrior {
 
 export module Bonus {
   export const RADIUS = 20
+  export const OPACITY = 0.7
 
   export const MAX_AMOUNT = 10
 
   export const EFFECT_COOLDOWN = 10e3
   export const SPAWN_COOLDOWN = 5e3
+
+  export const TYPES = 2
+  export const colors = {
+    [BonusType.SPEED_BOOST]: 0xaa00aa,
+    [BonusType.FAST_ATTACK]: 0xff0000,
+  }
 }

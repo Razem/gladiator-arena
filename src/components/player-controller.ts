@@ -31,12 +31,10 @@ export class PlayerController extends BaseComponent {
     const { textures, framePrefix, unit, model } = this
     const owner = this.owner.asSprite()
 
-    if (unit.activeBonus !== null && unit.bonusEndsAt < absolute) {
-      unit.deactivateBonus()
-    }
+    unit.deactivateBonuses(absolute)
 
     if (unit.state === UnitState.ATTACKING) {
-      if (unit.actionEndsAt < absolute) {
+      if (unit.attackEndsAt < absolute) {
         unit.state = UnitState.STANDING
       }
       else {
@@ -109,7 +107,7 @@ export class PlayerKeyController extends PlayerController {
     if (state === UnitState.STANDING || state === UnitState.WALKING) {
       if (cmpKey.isKeyPressed(ECSA.Keys.KEY_SPACE)) {
         this.unit.state = UnitState.ATTACKING
-        this.unit.actionEndsAt = absolute + Info.Warrior.ATTACK_COOLDOWN
+        this.unit.attackEndsAt = absolute + this.unit.attackCooldown
       }
       else {
         this.unit.state = UnitState.WALKING
