@@ -9,12 +9,18 @@ import * as Info from './info'
 export default class GameModel {
   state: GameState
   player: GameUnit
+  enemies: GameUnit[]
   obstacles: Rectangle[]
   bonuses: GameBonus[]
 
   initialize() {
     this.state = GameState.DEFAULT
     this.player = new GameUnit(new ECSA.Vector(100, 100))
+    this.enemies = [
+      new GameUnit(new ECSA.Vector(Info.WIDTH - 100, 100)),
+      new GameUnit(new ECSA.Vector(Info.WIDTH - 100, Info.HEIGHT - 100)),
+      new GameUnit(new ECSA.Vector(100, Info.HEIGHT - 100)),
+    ]
 
     this.obstacles = []
     for (let i = 0; i < 20; ++i) {
@@ -41,6 +47,21 @@ export default class GameModel {
 
     const c = new Circle(pos.x, pos.y, radius)
     return !this.obstacles.some(r => testCircleRectangleCollision(c, r))
+  }
+
+  isNotInCollisionWithOtherUnits(unit: GameUnit, pos: ECSA.Vector) {
+    const c = new Circle(pos.x, pos.y, unit.radius)
+    return !(
+      this.enemies
+      .concat(this.player)
+      .some(u => (
+        u !== unit
+        && testCircleCircleCollision(
+          c,
+          new Circle(u.pos.x, u.pos.y, u.radius)
+        )
+      ))
+    )
   }
 
   getCollidingBonus(pos: ECSA.Vector, radius: number) {

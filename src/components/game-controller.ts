@@ -66,7 +66,10 @@ export default class GameController extends BaseComponent {
           randomInt(100, Info.WIDTH - 100),
           randomInt(100, Info.HEIGHT - 100)
         )
-      } while (!model.isValidPoisition(pos, Info.Bonus.RADIUS))
+      } while (
+        !model.isValidPoisition(pos, Info.Bonus.RADIUS)
+        || !!model.getCollidingBonus(pos, Info.Bonus.RADIUS)
+      )
 
       const bonus = new GameBonus(pos, randomInt(0, Info.Bonus.TYPES))
 

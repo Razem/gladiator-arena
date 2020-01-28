@@ -1,7 +1,7 @@
 import * as ECSA from '../libs/pixi-component'
 import { Assets, Attributes, Names, UnitState } from './constants'
 import GameModel from './game-model'
-import { PlayerKeyController } from './components/player-controller'
+import PlayerController from './components/player-controller'
 import GameUnit from './game-unit'
 import { Direction } from './direction'
 import * as Info from './info'
@@ -49,6 +49,7 @@ export default class GameFactory {
 
     this.spawnObstacles(scene, model)
 
+    this.spawnEnemies(scene, model, resources)
     this.spawnPlayer(scene, model, resources)
   }
 
@@ -74,7 +75,7 @@ export default class GameFactory {
       .withAttribute(Attributes.GAME_UNIT, model.player)
       .globalPos(model.player.pos)
       .anchor(...Info.Warrior.ANCHOR)
-      .withComponent(new PlayerKeyController(textures, Assets.WARRIOR_BLUE_FRAME_PREFIX))
+      .withComponent(new PlayerController(textures, Assets.WARRIOR_BLUE_FRAME_PREFIX))
       .asSprite(
         textures[Assets.WARRIOR_BLUE_FRAME_PREFIX + Info.Warrior.DEFAULT_FRAME],
         Names.PLAYER
@@ -82,5 +83,23 @@ export default class GameFactory {
       .withParent(scene.findObjectByName(Names.LAYER_CHARACTERS))
       .build()
     )
+  }
+
+  spawnEnemies(scene: ECSA.Scene, model: GameModel, resources: PIXI.IResourceDictionary) {
+    const { textures } = resources[Assets.WARRIOR_RED]
+
+    for (const enemy of model.enemies) {
+      new ECSA.Builder(scene)
+      .withAttribute(Attributes.GAME_UNIT, enemy)
+      .globalPos(enemy.pos)
+      .anchor(...Info.Warrior.ANCHOR)
+      // .withComponent(new PlayerKeyController(textures, Assets.WARRIOR_RED_FRAME_PREFIX))
+      .asSprite(
+        textures[Assets.WARRIOR_RED_FRAME_PREFIX + Info.Warrior.DEFAULT_FRAME],
+        Names.PLAYER
+      )
+      .withParent(scene.findObjectByName(Names.LAYER_CHARACTERS))
+      .build()
+    }
   }
 }
