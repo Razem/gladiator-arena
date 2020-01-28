@@ -38,14 +38,18 @@ export default class GameController extends BaseComponent {
             (b.getAttribute(Attributes.GAME_BONUS) as GameBonus).id === bonusId
           ))
         )
-        scene
-        .findObjectByName(Names.LAYER_BONUSES)
-        .removeChild(bonusComponents[bonusComponentIndex])
-        bonusComponents.splice(bonusComponentIndex, 1)
+        if (bonusComponentIndex !== -1) {
+          scene
+          .findObjectByName(Names.LAYER_BONUSES)
+          .removeChild(bonusComponents[bonusComponentIndex])
+          bonusComponents.splice(bonusComponentIndex, 1)
+        }
 
         // Remove actual bonus object
-        const bonusIndex = model.bonuses.findIndex(b => b.id = bonusId)
-        model.bonuses.splice(bonusIndex, 1)
+        const bonusIndex = model.bonuses.findIndex(b => b.id === bonusId)
+        if (bonusIndex !== -1) {
+          model.bonuses.splice(bonusIndex, 1)
+        }
 
         break
     }
