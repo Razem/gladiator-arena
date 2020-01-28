@@ -4,18 +4,11 @@ import { Attributes, UnitState, GameState, Messages, BonusType, Names, Assets } 
 import GameUnit from '../game-unit'
 import { Direction, directionVectors, directionAngle } from '../direction'
 import * as Info from '../info'
-import Random from '../../libs/pixi-math/math/random'
+import { randomInt } from '../utils/random'
 import GameBonus from '../game-bonus'
 
 export default class GameController extends BaseComponent {
   bonusAddedAt: number = null
-  rnd: Random
-
-  constructor() {
-    super()
-    this.rnd = new Random(Date.now())
-  }
-
   bonusComponents: ECSA.Container[]
 
   onInit() {
@@ -56,7 +49,7 @@ export default class GameController extends BaseComponent {
   }
 
   onUpdate(delta: number, absolute: number) {
-    const { rnd, model, scene } = this
+    const { model, scene } = this
 
     if (this.bonusAddedAt === null) {
       this.bonusAddedAt = absolute
@@ -70,12 +63,12 @@ export default class GameController extends BaseComponent {
       let pos: ECSA.Vector
       do {
         pos = new ECSA.Vector(
-          rnd.uniformInt(100, Info.WIDTH - 100),
-          rnd.uniformInt(100, Info.HEIGHT - 100)
+          randomInt(100, Info.WIDTH - 100),
+          randomInt(100, Info.HEIGHT - 100)
         )
       } while (!model.isValidPoisition(pos, Info.Bonus.RADIUS))
 
-      const bonus = new GameBonus(pos, rnd.uniformInt(0, Info.Bonus.TYPES - 1))
+      const bonus = new GameBonus(pos, randomInt(0, Info.Bonus.TYPES))
 
       model.bonuses.push(bonus)
 

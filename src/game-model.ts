@@ -3,7 +3,7 @@ import GameUnit from './game-unit'
 import GameBonus from './game-bonus'
 import { GameState } from './constants'
 import { Rectangle, Circle, testCircleRectangleCollision, testCircleCircleCollision } from './utils/collisions'
-import Random from '../libs/pixi-math/math/random'
+import { randomInt } from './utils/random'
 import * as Info from './info'
 
 export default class GameModel {
@@ -17,13 +17,12 @@ export default class GameModel {
     this.player = new GameUnit(new ECSA.Vector(100, 100))
 
     this.obstacles = []
-    const rnd = new Random(Date.now())
     for (let i = 0; i < 20; ++i) {
       this.obstacles.push(new Rectangle(
-        rnd.uniformInt(30, Info.WIDTH - 230),
-        rnd.uniformInt(30, Info.HEIGHT - 230),
-        rnd.uniformInt(100, 200),
-        rnd.uniformInt(100, 200)
+        randomInt(30, Info.WIDTH - 230),
+        randomInt(30, Info.HEIGHT - 230),
+        randomInt(100, 200),
+        randomInt(100, 200)
       ))
     }
 
