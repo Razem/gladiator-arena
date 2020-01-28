@@ -13,37 +13,48 @@ export default class GameController extends BaseComponent {
 
   onInit() {
     super.onInit()
-    this.subscribe(Messages.BONUS_TAKEN)
+    this.subscribe(Messages.BONUS_TAKEN, Messages.BONUS_TAKEN)
     this.bonusComponents = []
   }
 
-  onMessage(msg: ECSA.Message) {
+  removeBonus(bonusId: number, unitId: number, time: number) {
     const { scene, model, bonusComponents } = this
 
+    const unit = model.getUnitById(unitId)
+    if (!unit) return
+
+    const bonusIndex = model.bonuses.findIndex(b => b.id === bonusId)
+    if (bonusIndex === -1) return
+
+    // Remove component
+    const bonusComponentIndex = (
+      bonusComponents
+      .findIndex(b => (
+        (b.getAttribute(Attributes.GAME_BONUS) as GameBonus).id === bonusId
+      ))
+    )
+    if (bonusComponentIndex !== -1) {
+      scene
+      .findObjectByName(Names.LAYER_BONUSES)
+      .removeChild(bonusComponents[bonusComponentIndex])
+      bonusComponents.splice(bonusComponentIndex, 1)
+    }
+
+    // Activate bonus
+    unit.activateBonus(model.bonuses[bonusIndex].type, time)
+
+    // Remove actual bonus object
+    model.bonuses.splice(bonusIndex, 1)
+  }
+
+  onMessage(msg: ECSA.Message) {
     switch (msg.action) {
       case Messages.BONUS_TAKEN:
-        const bonusId = msg.data.bonusId as number
-
-        // Remove component
-        const bonusComponentIndex = (
-          bonusComponents
-          .findIndex(b => (
-            (b.getAttribute(Attributes.GAME_BONUS) as GameBonus).id === bonusId
-          ))
+        this.removeBonus(
+          msg.data.bonusId as number,
+          msg.data.unitId as number,
+          msg.data.time as number
         )
-        if (bonusComponentIndex !== -1) {
-          scene
-          .findObjectByName(Names.LAYER_BONUSES)
-          .removeChild(bonusComponents[bonusComponentIndex])
-          bonusComponents.splice(bonusComponentIndex, 1)
-        }
-
-        // Remove actual bonus object
-        const bonusIndex = model.bonuses.findIndex(b => b.id === bonusId)
-        if (bonusIndex !== -1) {
-          model.bonuses.splice(bonusIndex, 1)
-        }
-
         break
     }
   }

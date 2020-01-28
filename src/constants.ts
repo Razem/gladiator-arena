@@ -45,4 +45,5 @@ export enum BonusType {
 
 export enum Messages {
   BONUS_TAKEN = 'bonus_taken',
+  UNIT_ATTACKED = 'unit_attacked',
 }

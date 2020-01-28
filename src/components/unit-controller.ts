@@ -96,10 +96,10 @@ export default class UnitController extends BaseComponent {
 
     const bonus = model.getCollidingBonus(unit.pos, unit.radius)
     if (bonus !== null) {
-      unit.activateBonus(bonus.type, absolute)
       this.sendMessage(Messages.BONUS_TAKEN, {
         bonusId: bonus.id,
         unitId: unit.id,
+        time: absolute,
       })
     }
   }

@@ -50,19 +50,27 @@ export default class GameModel {
     return !this.obstacles.some(r => testCircleRectangleCollision(c, r))
   }
 
-  isNotInCollisionWithOtherUnits(unit: GameUnit, pos: ECSA.Vector) {
-    const c = new Circle(pos.x, pos.y, unit.radius)
-    return !(
+  getUnitById(id: number) {
+    if (this.player.id === id) {
+      return this.player
+    }
+    return this.enemies.find(u => u.id === id)
+  }
+
+  getOtherUnits(unit: GameUnit) {
+    return (
       this.enemies
       .concat(this.player)
-      .some(u => (
-        u !== unit
-        && testCircleCircleCollision(
-          c,
-          new Circle(u.pos.x, u.pos.y, u.radius)
-        )
-      ))
+      .filter(u => u !== unit)
     )
+  }
+
+  isNotInCollisionWithOtherUnits(unit: GameUnit, pos: ECSA.Vector) {
+    const c = new Circle(pos.x, pos.y, unit.radius)
+    return !this.getOtherUnits(unit).some(u => testCircleCircleCollision(
+      c,
+      new Circle(u.pos.x, u.pos.y, u.radius)
+    ))
   }
 
   getCollidingBonus(pos: ECSA.Vector, radius: number) {
