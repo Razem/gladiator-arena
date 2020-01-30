@@ -7,49 +7,7 @@ import * as Info from '../info'
 import UnitController from './unit-controller'
 import { calculateDistance, testCircleCircleCollision } from '../utils/collisions'
 import GameModel from '../game-model'
-import { Circle } from 'pixi.js'
-
-type GameObject = {
-  pos: ECSA.Vector
-  radius: number
-}
-
-const index = (vector: ECSA.Vector) => `${vector.x.toFixed(0)},${vector.y.toFixed(0)}`
-function pseudoBFS(model: GameModel, unit: GameUnit, target: GameObject) {
-  const { radius, pos } = unit
-  const targetCircle = new Circle(target.pos.x, target.pos.y, target.radius)
-
-  const start = pos.clone()
-  const list = [start]
-  const visited: { [key: string]: boolean } = {}
-  const parents = new WeakMap<ECSA.Vector, ECSA.Vector>()
-
-  while (list.length > 0) {
-    const point = list.shift()
-    if (visited[index(point)]) continue
-    visited[index(point)] = true
-
-    if (testCircleCircleCollision(new Circle(point.x, point.y, radius), targetCircle)) {
-      let res = point
-      let parent: ECSA.Vector
-      while ((parent = parents.get(res)) !== start) {
-        res = parent
-      }
-      return calculateDirectionFromAngle(calculateUnitAngle(start, res))
-    }
-
-    for (let i = 0; i < DIRECTIONS_AMOUNT; ++i) {
-      const dirVector: ECSA.Vector = directionVectors[i]
-      const newPoint = point.add(dirVector.multiply(radius))
-      if (model.isValidPoisition(newPoint, radius)) {
-        parents.set(newPoint, point)
-        list.push(newPoint)
-      }
-    }
-  }
-
-  return Direction.UP_RIGHT
-}
+import { GameObject, pseudoBFS } from '../utils/pathfinding'
 
 export default class EnemyController extends UnitController {
   alterationEndsAt = 0
@@ -88,8 +46,13 @@ export default class EnemyController extends UnitController {
           }
         }
         else if (absolute > this.alterationEndsAt) {
-          unit.dir = pseudoBFS(model, unit, target)
-          this.alterationEndsAt = absolute + 500
+          const next = pseudoBFS(model, unit, target)
+          unit.dir = (
+            next
+            ? calculateDirectionFromAngle(calculateUnitAngle(unit.pos, next))
+            : Direction.UP_RIGHT
+          )
+          this.alterationEndsAt = absolute + 300
         }
       }
     }
