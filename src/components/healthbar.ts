@@ -12,6 +12,7 @@ export default class Healtbar extends BaseComponent {
   graphics: ECSA.Graphics
 
   onInit() {
+    super.onInit()
     this.graphics = this.factory.spawnHealthbar()
   }
 
