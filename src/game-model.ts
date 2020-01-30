@@ -24,14 +24,19 @@ export default class GameModel {
       new GameUnit(new ECSA.Vector(100, Info.HEIGHT - 100)),
     ]
 
+    const unitCircles = this.getOtherUnits(null).map(u => new Circle(u.pos.x, u.pos.y, u.radius))
+
     this.obstacles = []
-    for (let i = 0; i < 20; ++i) {
-      this.obstacles.push(new Rectangle(
+    while (this.obstacles.length < 20) {
+      const obstacle = new Rectangle(
         randomInt(30, Info.WIDTH - 230),
         randomInt(30, Info.HEIGHT - 230),
         randomInt(100, 200),
         randomInt(100, 200)
-      ))
+      )
+      if (!unitCircles.some(c => testCircleRectangleCollision(c, obstacle))) {
+        this.obstacles.push(obstacle)
+      }
     }
 
     this.bonuses = []
