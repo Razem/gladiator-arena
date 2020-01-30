@@ -1,7 +1,7 @@
 import * as ECSA from '../pixi-component';
 import { NetworkManager } from './network-manager';
 import { NetOutputMessage, NetInputMessage, NetMsgTypes, NetData } from './net-message';
-import { checkTime } from '../../src/utils/functions';
+import { checkTime } from '../utils/functions';
 
 /**
  * Messages for ECSA library that can be intercepted

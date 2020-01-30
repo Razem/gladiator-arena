@@ -2,7 +2,7 @@ import * as ECSA from '../pixi-component';
 import { NetOutputMessage, NetInputMessage, NetMsgTypes, NetData } from './net-message';
 import { NetworkManager } from './network-manager';
 import { NetworkMessages } from './net-client';
-import { checkTime } from '../../src/utils/functions';
+import { checkTime } from '../utils/functions';
 
 
 /**
