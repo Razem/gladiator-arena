@@ -40,7 +40,7 @@ function pseudoBFS(model: GameModel, unit: GameUnit, target: GameObject) {
 
     for (let i = 0; i < DIRECTIONS_AMOUNT; ++i) {
       const dirVector: ECSA.Vector = directionVectors[i]
-      const newPoint = point.add(dirVector.multiply(2 * radius))
+      const newPoint = point.add(dirVector.multiply(radius))
       if (model.isValidPoisition(newPoint, radius)) {
         parents.set(newPoint, point)
         list.push(newPoint)
@@ -48,7 +48,7 @@ function pseudoBFS(model: GameModel, unit: GameUnit, target: GameObject) {
     }
   }
 
-  return Direction.UP
+  return Direction.UP_RIGHT
 }
 
 export default class EnemyController extends UnitController {
