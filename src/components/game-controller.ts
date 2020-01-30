@@ -60,6 +60,7 @@ export default class GameController extends BaseComponent {
             scene.findObjectByName(Names.ENEMY + target.id)
           )
         }
+        this.spawnBonus(new GameBonus(target.pos.clone(), BonusType.REGENERATION))
         this.sendMessage(Messages.UNIT_DIED)
       }
     }
