@@ -13,10 +13,9 @@ export default class Healtbar extends BaseComponent {
 
   onInit() {
     const { scene } = this
-    const builder = new ECSA.Builder(scene)
 
     this.graphics = (
-      builder
+      new ECSA.Builder(scene)
       .asGraphics()
       .withParent(scene.stage)
       .build()
@@ -34,7 +33,10 @@ export default class Healtbar extends BaseComponent {
     const height = 10
     const opacity = 0.7
 
-    graphics.position.set(unit.pos.x - width / 2, unit.pos.y - 60)
+    graphics.position.set(
+      Math.max(0, unit.pos.x - width / 2),
+      Math.max(0, unit.pos.y - 60)
+    )
 
     const health = unit.health / Info.Warrior.MAX_HEALTH * width
 
