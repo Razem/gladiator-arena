@@ -48,6 +48,10 @@ export default class GameController extends BaseComponent {
           model.state = state
           scene.invokeWithDelay(0, () => factory.initialize())
         }
+        else if (state === GameState.NEXT_LEVEL) {
+          model.state = state
+          scene.invokeWithDelay(0, () => factory.initializeNextLevel())
+        }
         else {
           scene
           .findObjectByName(Names.LAYER_CHARACTERS)

@@ -40,6 +40,7 @@ export enum GameState {
   GAME = 1,
   VICTORY = 2,
   DEFEAT = 3,
+  NEXT_LEVEL = 4,
 }
 
 export enum BonusType {

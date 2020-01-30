@@ -19,7 +19,7 @@ export default class GameFactory {
     private resources: PIXI.IResourceDictionary
   ) {}
 
-  initialize() {
+  initializeCommon() {
     const { scene, model } = this
 
     scene.clearScene()
@@ -28,7 +28,6 @@ export default class GameFactory {
     scene.assignGlobalAttribute(Attributes.MODEL, model)
 
     scene.addGlobalComponent(new ECSA.KeyInputComponent())
-    scene.addGlobalComponent(new MenuController())
 
     const builder = new ECSA.Builder(scene)
 
@@ -44,33 +43,21 @@ export default class GameFactory {
     .withParent(backgroundLayer)
     .build()
 
-    builder
-    .asText('', 'Gladiator Arena', new PIXI.TextStyle({
-      fontFamily: 'Helvetica',
-      fontSize: 200,
-      fontWeight: 'bold',
-      fill: 'white',
-      dropShadow: true,
-      dropShadowAngle: 45,
-      dropShadowBlur: 0.5,
-      dropShadowDistance: 5,
-    }))
-    .anchor(0.5, 0.5)
-    .globalPos(Info.WIDTH / 2, Info.HEIGHT / 5)
-    .withParent(backgroundLayer)
-    .build()
+    return backgroundLayer
+  }
 
-    builder
-    .asText('', 'Press ENTER to start the game', new PIXI.TextStyle({
-      fontFamily: 'Helvetica',
-      fontSize: 50,
-      fontWeight: 'bold',
-      fill: 'white',
-    }))
-    .anchor(0.5, 0.5)
-    .globalPos(Info.WIDTH / 2, 3 * Info.HEIGHT / 4)
-    .withParent(backgroundLayer)
-    .build()
+  initialize() {
+    const { scene, model } = this
+    const backgroundLayer = this.initializeCommon()
+    const builder = new ECSA.Builder(scene)
+
+    scene.addGlobalComponent(new MenuController())
+
+    this.writeHeadingAndText(
+      builder,
+      backgroundLayer,
+      'Press ENTER to start the game'
+    )
 
     builder
     .asText('', 'Move using Arrows | Attack using Spacebar', new PIXI.TextStyle({
@@ -96,41 +83,89 @@ export default class GameFactory {
         color = 'red'
       }
 
-      builder
-      .asText('', text, new PIXI.TextStyle({
-        fontFamily: 'Helvetica',
-        fontSize: 100,
-        fontWeight: 'bold',
-        fill: color,
-      }))
-      .anchor(0.5, 0.5)
-      .globalPos(Info.WIDTH / 2, Info.HEIGHT / 2)
-      .withParent(backgroundLayer)
-      .build()
+      this.writeCenterText(builder, backgroundLayer, text, color)
     }
+  }
+
+  initializeNextLevel() {
+    const { scene, model } = this
+    const backgroundLayer = this.initializeCommon()
+    const builder = new ECSA.Builder(scene)
+
+    scene.addGlobalComponent(new MenuController())
+
+    this.writeHeadingAndText(
+      builder,
+      backgroundLayer,
+      'Press ENTER to continue to the next level'
+    )
+
+    this.writeCenterText(
+      builder,
+      backgroundLayer,
+      `LEVEL ${model.level - 1} DONE!`
+    )
+  }
+
+  writeHeadingAndText(builder: ECSA.Builder, backgroundLayer: ECSA.Container, text: string) {
+    builder
+    .asText('', 'Gladiator Arena', new PIXI.TextStyle({
+      fontFamily: 'Helvetica',
+      fontSize: 200,
+      fontWeight: 'bold',
+      fill: 'white',
+      dropShadow: true,
+      dropShadowAngle: 45,
+      dropShadowBlur: 0.5,
+      dropShadowDistance: 5,
+    }))
+    .anchor(0.5, 0.5)
+    .globalPos(Info.WIDTH / 2, Info.HEIGHT / 5)
+    .withParent(backgroundLayer)
+    .build()
+
+    builder
+    .asText('', text, new PIXI.TextStyle({
+      fontFamily: 'Helvetica',
+      fontSize: 50,
+      fontWeight: 'bold',
+      fill: 'white',
+    }))
+    .anchor(0.5, 0.5)
+    .globalPos(Info.WIDTH / 2, 3 * Info.HEIGHT / 4)
+    .withParent(backgroundLayer)
+    .build()
+  }
+
+  writeCenterText(
+    builder: ECSA.Builder,
+    backgroundLayer: ECSA.Container,
+    text: string,
+    color: string = 'white'
+  ) {
+    builder
+    .asText('', text, new PIXI.TextStyle({
+      fontFamily: 'Helvetica',
+      fontSize: 100,
+      fontWeight: 'bold',
+      fill: color,
+    }))
+    .anchor(0.5, 0.5)
+    .globalPos(Info.WIDTH / 2, Info.HEIGHT / 2)
+    .withParent(backgroundLayer)
+    .build()
   }
 
   initializeGame() {
     const { scene, model } = this
 
-    scene.clearScene()
     model.initialize()
+    this.initializeCommon()
 
-    scene.assignGlobalAttribute(Attributes.FACTORY, this)
-    scene.assignGlobalAttribute(Attributes.MODEL, model)
-
-    scene.addGlobalComponent(new ECSA.KeyInputComponent())
     scene.addGlobalComponent(new GameController())
     scene.addGlobalComponent(soundComponent())
 
     const builder = new ECSA.Builder(scene)
-
-    const backgroundLayer = (
-      builder
-      .withParent(scene.stage)
-      .asContainer(Names.LAYER_BACKGROUND)
-      .build()
-    )
 
     builder
     .withParent(scene.stage)
@@ -145,11 +180,6 @@ export default class GameFactory {
     builder
     .withParent(scene.stage)
     .asContainer(Names.LAYER_CHARACTERS)
-    .build()
-
-    builder
-    .asSprite(PIXI.Texture.from(Assets.BACKGROUND), Names.BACKGROUND)
-    .withParent(backgroundLayer)
     .build()
 
     this.spawnObstacles()

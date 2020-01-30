@@ -15,17 +15,23 @@ export default class GameModel {
   obstacles: Rectangle[]
   bonuses: GameBonus[]
 
+  static MAX_LEVEL = 6
+  level = 1
+
   initialize() {
     this.state = GameState.GAME
     this.player = new GameUnit(new ECSA.Vector(Info.WIDTH / 2, Info.HEIGHT / 2))
     this.enemies = [
       new GameUnit(new ECSA.Vector(100, 100)),
       new GameUnit(new ECSA.Vector(Info.WIDTH - 100, 100)),
-      new GameUnit(new ECSA.Vector(Info.WIDTH / 2, 100)),
       new GameUnit(new ECSA.Vector(Info.WIDTH - 100, Info.HEIGHT - 100)),
-      new GameUnit(new ECSA.Vector(Info.WIDTH / 2, Info.HEIGHT - 100)),
       new GameUnit(new ECSA.Vector(100, Info.HEIGHT - 100)),
+      new GameUnit(new ECSA.Vector(Info.WIDTH / 2, 100)),
+      new GameUnit(new ECSA.Vector(Info.WIDTH / 2, Info.HEIGHT - 100)),
     ]
+    while (this.enemies.length > this.level) {
+      this.enemies.pop()
+    }
 
     const unitCircles = this.getOtherUnits(null).map(u => new Circle(u.pos.x, u.pos.y, u.radius))
 
@@ -133,7 +139,11 @@ export default class GameModel {
     if (index !== -1) {
       this.enemies.splice(index, 1)
       if (this.enemies.length === 0) {
-        return GameState.VICTORY
+        if (this.level === GameModel.MAX_LEVEL) {
+          return GameState.VICTORY
+        }
+        this.level += 1
+        return GameState.NEXT_LEVEL
       }
     }
 
