@@ -6,6 +6,7 @@ import { Rectangle, Circle, testCircleRectangleCollision, testCircleCircleCollis
 import { randomInt } from './utils/random'
 import * as Info from './info'
 import { calculateAngleFromDirection, calculateUnitAngle } from './direction'
+import { pseudoBFS } from './utils/pathfinding'
 
 export default class GameModel {
   state = GameState.DEFAULT
@@ -35,20 +36,26 @@ export default class GameModel {
 
     const unitCircles = this.getOtherUnits(null).map(u => new Circle(u.pos.x, u.pos.y, u.radius))
 
-    this.obstacles = []
-    while (this.obstacles.length < 20) {
-      const obstacle = new Rectangle(
-        randomInt(65, Info.WIDTH - 265),
-        randomInt(65, Info.HEIGHT - 265),
-        randomInt(100, 200),
-        randomInt(100, 200)
-      )
-      if (!unitCircles.some(c => testCircleRectangleCollision(c, obstacle))) {
-        this.obstacles.push(obstacle)
+    do {
+      this.obstacles = []
+      while (this.obstacles.length < 20) {
+        const obstacle = new Rectangle(
+          randomInt(65, Info.WIDTH - 265),
+          randomInt(65, Info.HEIGHT - 265),
+          randomInt(100, 200),
+          randomInt(100, 200)
+        )
+        if (!unitCircles.some(c => testCircleRectangleCollision(c, obstacle))) {
+          this.obstacles.push(obstacle)
+        }
       }
-    }
+    } while (!this.isValidConfiguration())
 
     this.bonuses = []
+  }
+
+  isValidConfiguration() {
+    return this.enemies.every(u => !!pseudoBFS(this, u, this.player))
   }
 
   isValidPoisition(pos: ECSA.Vector, radius: number) {
