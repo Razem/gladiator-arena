@@ -132,6 +132,7 @@ export default class GameModel {
 
   killUnit(unit: GameUnit) {
     if (this.player === unit) {
+      this.level = 1
       return GameState.DEFEAT
     }
 
@@ -140,6 +141,7 @@ export default class GameModel {
       this.enemies.splice(index, 1)
       if (this.enemies.length === 0) {
         if (this.level === GameModel.MAX_LEVEL) {
+          this.level = 1
           return GameState.VICTORY
         }
         this.level += 1
