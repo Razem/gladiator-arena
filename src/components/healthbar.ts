@@ -27,8 +27,8 @@ export default class Healtbar extends BaseComponent {
     const opacity = 0.7
 
     graphics.position.set(
-      Math.max(0, unit.pos.x - width / 2),
-      Math.max(0, unit.pos.y - 60)
+      Math.min(Math.max(0, unit.pos.x - width / 2), Info.WIDTH - width),
+      Math.min(Math.max(0, unit.pos.y - 60), Info.HEIGHT - height)
     )
 
     const health = unit.health / Info.Warrior.MAX_HEALTH * width
