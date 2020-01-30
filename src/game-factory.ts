@@ -103,7 +103,7 @@ export default class GameFactory {
     this.writeCenterText(
       builder,
       backgroundLayer,
-      `LEVEL ${model.level - 1} DONE!`
+      `LEVEL ${model.level - 1} COMPLETE!`
     )
   }
 
