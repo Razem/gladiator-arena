@@ -16,7 +16,7 @@ export default class GameController extends BaseComponent {
   }
 
   removeBonus(bonusId: number, unitId: number, time: number) {
-    const { scene, model } = this
+    const { model, factory } = this
 
     const unit = model.getUnitById(unitId)
     if (!unit) return
@@ -25,12 +25,7 @@ export default class GameController extends BaseComponent {
     if (bonusIndex === -1) return
 
     // Remove component
-    const bonusComponent = scene.findObjectByName(Names.BONUS + model.bonuses[bonusIndex].id)
-    if (bonusComponent) {
-      scene
-      .findObjectByName(Names.LAYER_BONUSES)
-      .removeChild(bonusComponent)
-    }
+    factory.removeBonus(model.bonuses[bonusIndex])
 
     // Activate bonus
     unit.activateBonus(model.bonuses[bonusIndex].type, time)
@@ -82,28 +77,9 @@ export default class GameController extends BaseComponent {
   }
 
   spawnBonus(bonus: GameBonus) {
-    const { model, scene } = this
-
+    const { model } = this
     model.bonuses.push(bonus)
-
-    const comp = (
-      new ECSA.Builder(scene)
-      .withAttribute(Attributes.GAME_BONUS, bonus)
-      .globalPos(bonus.pos)
-      .anchor(...Info.Warrior.ANCHOR)
-      .asGraphics(Names.BONUS + bonus.id)
-      .withParent(scene.findObjectByName(Names.LAYER_BONUSES))
-      .build()
-      .asGraphics()
-    )
-
-    comp
-    .beginFill(Info.Bonus.colors[bonus.type], Info.Bonus.OPACITY)
-    .drawCircle(0, 0, Info.Bonus.RADIUS)
-    .endFill()
-    .beginFill(Info.Bonus.colors[bonus.type], Info.Bonus.INNER_OPACITY)
-    .drawCircle(0, 0, Info.Bonus.INNER_RADIUS)
-    .endFill()
+    this.factory.spawnBonus(bonus)
   }
 
   onUpdate(delta: number, absolute: number) {

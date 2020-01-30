@@ -10,6 +10,7 @@ import MenuController from './components/menu-controller'
 import Healthbar from './components/healthbar'
 import EnemyController from './components/enemy-controller'
 import { soundComponent } from './components/sound-component'
+import GameBonus from './game-bonus'
 
 export default class GameFactory {
   constructor(
@@ -210,6 +211,42 @@ export default class GameFactory {
       )
       .withParent(scene.findObjectByName(Names.LAYER_CHARACTERS))
       .build()
+    }
+  }
+
+  spawnBonus(bonus: GameBonus) {
+    const { scene } = this
+
+    const comp = (
+      new ECSA.Builder(scene)
+      .withAttribute(Attributes.GAME_BONUS, bonus)
+      .globalPos(bonus.pos)
+      .anchor(...Info.Warrior.ANCHOR)
+      .asGraphics(Names.BONUS + bonus.id)
+      .withParent(scene.findObjectByName(Names.LAYER_BONUSES))
+      .build()
+      .asGraphics()
+    )
+
+    comp
+    .beginFill(Info.Bonus.colors[bonus.type], Info.Bonus.OPACITY)
+    .drawCircle(0, 0, Info.Bonus.RADIUS)
+    .endFill()
+    .beginFill(Info.Bonus.colors[bonus.type], Info.Bonus.INNER_OPACITY)
+    .drawCircle(0, 0, Info.Bonus.INNER_RADIUS)
+    .endFill()
+
+    return comp
+  }
+
+  removeBonus(bonus: GameBonus) {
+    const { scene } = this
+
+    const bonusComponent = scene.findObjectByName(Names.BONUS + bonus.id)
+    if (bonusComponent) {
+      scene
+      .findObjectByName(Names.LAYER_BONUSES)
+      .removeChild(bonusComponent)
     }
   }
 }
