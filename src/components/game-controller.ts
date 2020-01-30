@@ -44,21 +44,30 @@ export default class GameController extends BaseComponent {
     if (target) {
       if (target.health === 0) {
         const state = model.killUnit(target)
-        if (state === GameState.VICTORY || state === GameState.DEFEAT) {
-          model.state = state
-          scene.invokeWithDelay(0, () => factory.initialize())
-        }
-        else if (state === GameState.NEXT_LEVEL) {
-          model.state = state
-          scene.invokeWithDelay(0, () => factory.initializeNextLevel())
-        }
-        else {
+        if (state !== GameState.DEFEAT) {
           scene
           .findObjectByName(Names.LAYER_CHARACTERS)
           .removeChild(
             scene.findObjectByName(Names.ENEMY + target.id)
           )
         }
+        else {
+          scene
+          .findObjectByName(Names.LAYER_CHARACTERS)
+          .removeChild(
+            scene.findObjectByName(Names.PLAYER)
+          )
+        }
+
+        if (state === GameState.VICTORY || state === GameState.DEFEAT) {
+          model.state = state
+          scene.invokeWithDelay(1000, () => factory.initialize())
+        }
+        else if (state === GameState.NEXT_LEVEL) {
+          model.state = state
+          scene.invokeWithDelay(1000, () => factory.initializeNextLevel())
+        }
+
         this.spawnBonus(new GameBonus(target.pos.clone(), BonusType.REGENERATION))
         this.sendMessage(Messages.UNIT_DIED)
       }
@@ -66,6 +75,8 @@ export default class GameController extends BaseComponent {
   }
 
   onMessage(msg: ECSA.Message) {
+    if (this.model.state !== GameState.GAME) return
+
     switch (msg.action) {
       case Messages.BONUS_TAKEN:
         this.removeBonus(
@@ -88,6 +99,7 @@ export default class GameController extends BaseComponent {
 
   onUpdate(delta: number, absolute: number) {
     const { model } = this
+    if (model.state !== GameState.GAME) return
 
     if (this.bonusAddedAt === null) {
       this.bonusAddedAt = absolute

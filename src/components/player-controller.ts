@@ -8,11 +8,16 @@ import UnitController from './unit-controller'
 
 export default class PlayerController extends UnitController {
   onUpdate(delta: number, absolute: number) {
-    const cmp = this.scene.stage.findComponentByName<ECSA.KeyInputComponent>(
+    const { model, unit, scene } = this
+    if (model.state !== GameState.GAME) {
+      return
+    }
+
+    const cmp = scene.stage.findComponentByName<ECSA.KeyInputComponent>(
       ECSA.KeyInputComponent.name
     )
     const cmpKey = <ECSA.KeyInputComponent><any>cmp
-    const state = this.unit.state
+    const { state } = unit
 
     if (state === UnitState.STANDING || state === UnitState.WALKING) {
       const up = cmpKey.isKeyPressed(ECSA.Keys.KEY_UP)
@@ -22,42 +27,42 @@ export default class PlayerController extends UnitController {
 
       let selectedDirection = true
       if (up && right) {
-        this.unit.dir = Direction.UP_RIGHT
+        unit.dir = Direction.UP_RIGHT
       }
       else if (down && right) {
-        this.unit.dir = Direction.DOWN_RIGHT
+        unit.dir = Direction.DOWN_RIGHT
       }
       else if (down && left) {
-        this.unit.dir = Direction.DOWN_LEFT
+        unit.dir = Direction.DOWN_LEFT
       }
       else if (up && left) {
-        this.unit.dir = Direction.UP_LEFT
+        unit.dir = Direction.UP_LEFT
       }
       else if (left) {
-        this.unit.dir = Direction.LEFT
+        unit.dir = Direction.LEFT
       }
       else if (right) {
-        this.unit.dir = Direction.RIGHT
+        unit.dir = Direction.RIGHT
       }
       else if (up) {
-        this.unit.dir = Direction.UP
+        unit.dir = Direction.UP
       }
       else if (down) {
-        this.unit.dir = Direction.DOWN
+        unit.dir = Direction.DOWN
       }
       else {
         selectedDirection = false
       }
 
       if (cmpKey.isKeyPressed(ECSA.Keys.KEY_SPACE)) {
-        if (this.unit.attack(absolute)) {
+        if (unit.attack(absolute)) {
           this.sendMessage(Messages.UNIT_ATTACKED, {
-            unitId: this.unit.id,
+            unitId: unit.id,
           })
         }
       }
       else {
-        this.unit.state = selectedDirection ? UnitState.WALKING : UnitState.STANDING
+        unit.state = selectedDirection ? UnitState.WALKING : UnitState.STANDING
       }
     }
 

@@ -24,11 +24,11 @@ export default class UnitController extends BaseComponent {
   }
 
   onUpdate(delta: number, absolute: number) {
-    if (this.model.state !== GameState.GAME) {
+    const { textures, framePrefix, unit, model } = this
+    if (model.state !== GameState.GAME) {
       return
     }
 
-    const { textures, framePrefix, unit, model } = this
     const owner = this.owner.asSprite()
 
     unit.deactivateBonuses(absolute)

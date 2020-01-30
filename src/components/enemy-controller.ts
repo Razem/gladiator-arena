@@ -14,6 +14,9 @@ export default class EnemyController extends UnitController {
 
   onUpdate(delta: number, absolute: number) {
     const { unit, model } = this
+    if (model.state !== GameState.GAME) {
+      return
+    }
 
     if (unit.state === UnitState.STANDING || unit.state === UnitState.WALKING) {
       const target: GameObject = (
