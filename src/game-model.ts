@@ -29,8 +29,8 @@ export default class GameModel {
     this.obstacles = []
     while (this.obstacles.length < 20) {
       const obstacle = new Rectangle(
-        randomInt(30, Info.WIDTH - 230),
-        randomInt(30, Info.HEIGHT - 230),
+        randomInt(50, Info.WIDTH - 250),
+        randomInt(50, Info.HEIGHT - 250),
         randomInt(100, 200),
         randomInt(100, 200)
       )
