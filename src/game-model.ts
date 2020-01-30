@@ -17,10 +17,13 @@ export default class GameModel {
 
   initialize() {
     this.state = GameState.GAME
-    this.player = new GameUnit(new ECSA.Vector(100, 100))
+    this.player = new GameUnit(new ECSA.Vector(Info.WIDTH / 2, Info.HEIGHT / 2))
     this.enemies = [
+      new GameUnit(new ECSA.Vector(100, 100)),
       new GameUnit(new ECSA.Vector(Info.WIDTH - 100, 100)),
+      new GameUnit(new ECSA.Vector(Info.WIDTH / 2, 100)),
       new GameUnit(new ECSA.Vector(Info.WIDTH - 100, Info.HEIGHT - 100)),
+      new GameUnit(new ECSA.Vector(Info.WIDTH / 2, Info.HEIGHT - 100)),
       new GameUnit(new ECSA.Vector(100, Info.HEIGHT - 100)),
     ]
 
@@ -29,8 +32,8 @@ export default class GameModel {
     this.obstacles = []
     while (this.obstacles.length < 20) {
       const obstacle = new Rectangle(
-        randomInt(50, Info.WIDTH - 250),
-        randomInt(50, Info.HEIGHT - 250),
+        randomInt(65, Info.WIDTH - 265),
+        randomInt(65, Info.HEIGHT - 265),
         randomInt(100, 200),
         randomInt(100, 200)
       )
