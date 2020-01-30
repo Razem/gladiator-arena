@@ -25,6 +25,7 @@ export enum Names {
   BACKGROUND = 'background',
   PLAYER = 'player',
   ENEMY = 'enemy',
+  BONUS = 'bonus',
 }
 
 export enum UnitState {

@@ -9,16 +9,14 @@ import GameBonus from '../game-bonus'
 
 export default class GameController extends BaseComponent {
   bonusAddedAt: number = null
-  bonusComponents: ECSA.Container[]
 
   onInit() {
     super.onInit()
     this.subscribe(Messages.BONUS_TAKEN, Messages.UNIT_ATTACKED)
-    this.bonusComponents = []
   }
 
   removeBonus(bonusId: number, unitId: number, time: number) {
-    const { scene, model, bonusComponents } = this
+    const { scene, model } = this
 
     const unit = model.getUnitById(unitId)
     if (!unit) return
@@ -27,17 +25,11 @@ export default class GameController extends BaseComponent {
     if (bonusIndex === -1) return
 
     // Remove component
-    const bonusComponentIndex = (
-      bonusComponents
-      .findIndex(b => (
-        (b.getAttribute(Attributes.GAME_BONUS) as GameBonus).id === bonusId
-      ))
-    )
-    if (bonusComponentIndex !== -1) {
+    const bonusComponent = scene.findObjectByName(Names.BONUS + model.bonuses[bonusIndex].id)
+    if (bonusComponent) {
       scene
       .findObjectByName(Names.LAYER_BONUSES)
-      .removeChild(bonusComponents[bonusComponentIndex])
-      bonusComponents.splice(bonusComponentIndex, 1)
+      .removeChild(bonusComponent)
     }
 
     // Activate bonus
@@ -88,8 +80,33 @@ export default class GameController extends BaseComponent {
     }
   }
 
-  onUpdate(delta: number, absolute: number) {
+  spawnBonus(bonus: GameBonus) {
     const { model, scene } = this
+
+    model.bonuses.push(bonus)
+
+    const comp = (
+      new ECSA.Builder(scene)
+      .withAttribute(Attributes.GAME_BONUS, bonus)
+      .globalPos(bonus.pos)
+      .anchor(...Info.Warrior.ANCHOR)
+      .asGraphics(Names.BONUS + bonus.id)
+      .withParent(scene.findObjectByName(Names.LAYER_BONUSES))
+      .build()
+      .asGraphics()
+    )
+
+    comp
+    .beginFill(Info.Bonus.colors[bonus.type], Info.Bonus.OPACITY)
+    .drawCircle(0, 0, Info.Bonus.RADIUS)
+    .endFill()
+    .beginFill(Info.Bonus.colors[bonus.type], Info.Bonus.INNER_OPACITY)
+    .drawCircle(0, 0, Info.Bonus.INNER_RADIUS)
+    .endFill()
+  }
+
+  onUpdate(delta: number, absolute: number) {
+    const { model } = this
 
     if (this.bonusAddedAt === null) {
       this.bonusAddedAt = absolute
@@ -112,29 +129,7 @@ export default class GameController extends BaseComponent {
       )
 
       const bonus = new GameBonus(pos, randomInt(0, Info.Bonus.TYPES))
-
-      model.bonuses.push(bonus)
-
-      const comp = (
-        new ECSA.Builder(scene)
-        .withAttribute(Attributes.GAME_BONUS, bonus)
-        .globalPos(pos)
-        .anchor(...Info.Warrior.ANCHOR)
-        .asGraphics()
-        .withParent(scene.findObjectByName(Names.LAYER_BONUSES))
-        .build()
-        .asGraphics()
-      )
-
-      this.bonusComponents.push(comp)
-
-      comp
-      .beginFill(Info.Bonus.colors[bonus.type], Info.Bonus.OPACITY)
-      .drawCircle(0, 0, Info.Bonus.RADIUS)
-      .endFill()
-      .beginFill(Info.Bonus.colors[bonus.type], Info.Bonus.INNER_OPACITY)
-      .drawCircle(0, 0, Info.Bonus.INNER_RADIUS)
-      .endFill()
+      this.spawnBonus(bonus)
     }
   }
 }
