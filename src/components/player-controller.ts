@@ -15,6 +15,40 @@ export default class PlayerController extends UnitController {
     const state = this.unit.state
 
     if (state === UnitState.STANDING || state === UnitState.WALKING) {
+      const up = cmpKey.isKeyPressed(ECSA.Keys.KEY_UP)
+      const right = cmpKey.isKeyPressed(ECSA.Keys.KEY_RIGHT)
+      const down = cmpKey.isKeyPressed(ECSA.Keys.KEY_DOWN)
+      const left = cmpKey.isKeyPressed(ECSA.Keys.KEY_LEFT)
+
+      let selectedDirection = true
+      if (up && right) {
+        this.unit.dir = Direction.UP_RIGHT
+      }
+      else if (down && right) {
+        this.unit.dir = Direction.DOWN_RIGHT
+      }
+      else if (down && left) {
+        this.unit.dir = Direction.DOWN_LEFT
+      }
+      else if (up && left) {
+        this.unit.dir = Direction.UP_LEFT
+      }
+      else if (left) {
+        this.unit.dir = Direction.LEFT
+      }
+      else if (right) {
+        this.unit.dir = Direction.RIGHT
+      }
+      else if (up) {
+        this.unit.dir = Direction.UP
+      }
+      else if (down) {
+        this.unit.dir = Direction.DOWN
+      }
+      else {
+        selectedDirection = false
+      }
+
       if (cmpKey.isKeyPressed(ECSA.Keys.KEY_SPACE)) {
         if (this.unit.attack(absolute)) {
           this.sendMessage(Messages.UNIT_ATTACKED, {
@@ -23,40 +57,7 @@ export default class PlayerController extends UnitController {
         }
       }
       else {
-        this.unit.state = UnitState.WALKING
-
-        const up = cmpKey.isKeyPressed(ECSA.Keys.KEY_UP)
-        const right = cmpKey.isKeyPressed(ECSA.Keys.KEY_RIGHT)
-        const down = cmpKey.isKeyPressed(ECSA.Keys.KEY_DOWN)
-        const left = cmpKey.isKeyPressed(ECSA.Keys.KEY_LEFT)
-
-        if (up && right) {
-          this.unit.dir = Direction.UP_RIGHT
-        }
-        else if (down && right) {
-          this.unit.dir = Direction.DOWN_RIGHT
-        }
-        else if (down && left) {
-          this.unit.dir = Direction.DOWN_LEFT
-        }
-        else if (up && left) {
-          this.unit.dir = Direction.UP_LEFT
-        }
-        else if (left) {
-          this.unit.dir = Direction.LEFT
-        }
-        else if (right) {
-          this.unit.dir = Direction.RIGHT
-        }
-        else if (up) {
-          this.unit.dir = Direction.UP
-        }
-        else if (down) {
-          this.unit.dir = Direction.DOWN
-        }
-        else {
-          this.unit.state = UnitState.STANDING
-        }
+        this.unit.state = selectedDirection ? UnitState.WALKING : UnitState.STANDING
       }
     }
 
