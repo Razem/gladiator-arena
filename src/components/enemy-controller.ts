@@ -2,27 +2,62 @@ import * as ECSA from '../../libs/pixi-component'
 import BaseComponent from './base-component'
 import { Attributes, UnitState, GameState, Messages } from '../constants'
 import GameUnit from '../game-unit'
-import { Direction, directionVectors, calculateAngleFromDirection, calculateUnitAngle, calculateDirectionFromAngle } from '../direction'
+import { Direction, directionVectors, calculateAngleFromDirection, calculateUnitAngle, calculateDirectionFromAngle, DIRECTIONS_AMOUNT } from '../direction'
 import * as Info from '../info'
 import UnitController from './unit-controller'
-import { calculateDistance } from '../utils/collisions'
+import { calculateDistance, testCircleCircleCollision } from '../utils/collisions'
+import GameModel from '../game-model'
+import { Circle } from 'pixi.js'
 
 type GameObject = {
   pos: ECSA.Vector
+  radius: number
+}
+
+const index = (vector: ECSA.Vector) => `${vector.x.toFixed(0)},${vector.y.toFixed(0)}`
+function pseudoBFS(model: GameModel, unit: GameUnit, target: GameObject) {
+  const { radius, pos } = unit
+  const targetCircle = new Circle(target.pos.x, target.pos.y, target.radius)
+
+  const start = pos.clone()
+  const list = [start]
+  const visited: { [key: string]: boolean } = {}
+  const parents = new WeakMap<ECSA.Vector, ECSA.Vector>()
+
+  while (list.length > 0) {
+    const point = list.shift()
+    if (visited[index(point)]) continue
+    visited[index(point)] = true
+
+    if (testCircleCircleCollision(new Circle(point.x, point.y, radius), targetCircle)) {
+      let res = point
+      let parent: ECSA.Vector
+      while ((parent = parents.get(res)) !== start) {
+        res = parent
+      }
+      return calculateDirectionFromAngle(calculateUnitAngle(start, res))
+    }
+
+    for (let i = 0; i < DIRECTIONS_AMOUNT; ++i) {
+      const dirVector: ECSA.Vector = directionVectors[i]
+      const newPoint = point.add(dirVector.multiply(radius))
+      if (model.isValidPoisition(newPoint, radius)) {
+        parents.set(newPoint, point)
+        list.push(newPoint)
+      }
+    }
+  }
+
+  return Direction.UP
 }
 
 export default class EnemyController extends UnitController {
-  lastDir: Direction = null
-  lastPos: ECSA.Vector = null
-  posAlterationEndsAt = 0
+  alterationEndsAt = 0
 
   onUpdate(delta: number, absolute: number) {
     const { unit, model } = this
 
-    if (unit.state === UnitState.ATTACKING) {
-      this.lastPos = null
-    }
-    else if (unit.state === UnitState.STANDING || unit.state === UnitState.WALKING) {
+    if (unit.state === UnitState.STANDING || unit.state === UnitState.WALKING) {
       const target: GameObject = (
         (model.getOtherUnits(unit) as GameObject[])
         .concat(model.bonuses)
@@ -36,31 +71,6 @@ export default class EnemyController extends UnitController {
       unit.state = UnitState.WALKING
 
       if (target) {
-        if (absolute > this.posAlterationEndsAt) {
-          const angle = calculateUnitAngle(unit.pos, target.pos)
-          unit.dir = calculateDirectionFromAngle(angle)
-
-          if (this.lastPos) {
-            if (
-              unit.dir === this.lastDir
-              && unit.pos.x === this.lastPos.x
-              && unit.pos.y === this.lastPos.y
-            ) {
-              const add = Math.random() < 0.5 ? 1 : 7
-              unit.dir = (unit.dir + add) % 8
-              this.posAlterationEndsAt = absolute + 1500
-            }
-          }
-
-          if (absolute > this.posAlterationEndsAt) {
-            this.lastPos = unit.pos.clone()
-            this.lastDir = unit.dir
-          }
-          else {
-            this.lastPos = null
-          }
-        }
-
         const dist = calculateDistance(
           unit.pos.x, unit.pos.y,
           target.pos.x, target.pos.y
@@ -70,11 +80,16 @@ export default class EnemyController extends UnitController {
           target instanceof GameUnit
           && dist < Info.Warrior.ATTACK_DISTANCE
         ) {
+          unit.dir = calculateDirectionFromAngle(calculateUnitAngle(unit.pos, target.pos))
           if (unit.attack(absolute)) {
             this.sendMessage(Messages.UNIT_ATTACKED, {
               unitId: unit.id,
             })
           }
+        }
+        else if (absolute > this.alterationEndsAt) {
+          unit.dir = pseudoBFS(model, unit, target)
+          this.alterationEndsAt = absolute + 500
         }
       }
     }

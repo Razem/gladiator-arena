@@ -1,6 +1,8 @@
 import * as ECSA from '../libs/pixi-component'
 import GameUnit from './game-unit'
 
+export const DIRECTIONS_AMOUNT = 8
+
 export enum Direction {
   UP,
   UP_RIGHT,
@@ -14,13 +16,13 @@ export enum Direction {
 
 export const directionVectors = {
   [Direction.UP]: new ECSA.Vector(0, -1),
-  [Direction.UP_RIGHT]: new ECSA.Vector(Math.SQRT1_2, -Math.SQRT1_2),
+  [Direction.UP_RIGHT]: new ECSA.Vector(1, -1),
   [Direction.RIGHT]: new ECSA.Vector(1, 0),
-  [Direction.DOWN_RIGHT]: new ECSA.Vector(Math.SQRT1_2, Math.SQRT1_2),
+  [Direction.DOWN_RIGHT]: new ECSA.Vector(1, 1),
   [Direction.DOWN]: new ECSA.Vector(0, 1),
-  [Direction.DOWN_LEFT]: new ECSA.Vector(-Math.SQRT1_2, Math.SQRT1_2),
+  [Direction.DOWN_LEFT]: new ECSA.Vector(-1, 1),
   [Direction.LEFT]: new ECSA.Vector(-1, 0),
-  [Direction.UP_LEFT]: new ECSA.Vector(-Math.SQRT1_2, -Math.SQRT1_2),
+  [Direction.UP_LEFT]: new ECSA.Vector(-1, -1),
 }
 
 export function calculateAngleFromDirection(dir: Direction) {

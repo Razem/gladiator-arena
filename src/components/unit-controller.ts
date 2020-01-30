@@ -59,6 +59,7 @@ export default class UnitController extends BaseComponent {
     if (unit.state === UnitState.WALKING) {
       let newPos = unit.pos.add(
         directionVectors[unit.dir]
+        .normalize()
         .multiply(delta / 1000)
         .multiply(unit.speed)
       )
