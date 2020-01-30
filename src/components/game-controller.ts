@@ -68,6 +68,7 @@ export default class GameController extends BaseComponent {
             scene.findObjectByName(Names.ENEMY + target.id)
           )
         }
+        this.sendMessage(Messages.UNIT_DIED)
       }
     }
   }

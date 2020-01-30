@@ -5,6 +5,9 @@ export enum Assets {
   WARRIOR_BLUE_FRAME_PREFIX = 'warrior-blue-',
   WARRIOR_RED = 'warrior_red',
   WARRIOR_RED_FRAME_PREFIX = 'warrior-red-',
+  WILHELM_SCREAM = 'wilhelm_scream',
+  AXE_SWING = 'axe_swing',
+  BONUS_TAKEN = 'bonus_taken',
 }
 
 export enum Attributes {
@@ -47,4 +50,5 @@ export enum BonusType {
 export enum Messages {
   BONUS_TAKEN = 'bonus_taken',
   UNIT_ATTACKED = 'unit_attacked',
+  UNIT_DIED = 'unit_died',
 }

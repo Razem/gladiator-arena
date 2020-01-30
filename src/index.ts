@@ -30,6 +30,9 @@ class Game {
     .add(Assets.OBSTACLE, './assets/environment/obstacle.png')
     .add(Assets.WARRIOR_BLUE, './assets/characters/warrior-blue.json')
     .add(Assets.WARRIOR_RED, './assets/characters/warrior-red.json')
+    .add(Assets.WILHELM_SCREAM, './assets/sounds/wilhelm-scream.ogg')
+    .add(Assets.AXE_SWING, './assets/sounds/axe-swing.ogg')
+    .add(Assets.BONUS_TAKEN, './assets/sounds/bonus-taken.ogg')
     .load(() => this.onAssetsLoaded())
   }
 

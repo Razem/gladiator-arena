@@ -9,6 +9,7 @@ import GameController from './components/game-controller'
 import MenuController from './components/menu-controller'
 import Healthbar from './components/healthbar'
 import EnemyController from './components/enemy-controller'
+import { soundComponent } from './components/sound-component'
 
 export default class GameFactory {
   constructor(
@@ -119,6 +120,7 @@ export default class GameFactory {
 
     scene.addGlobalComponent(new ECSA.KeyInputComponent())
     scene.addGlobalComponent(new GameController())
+    scene.addGlobalComponent(soundComponent())
 
     const builder = new ECSA.Builder(scene)
 
