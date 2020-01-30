@@ -249,4 +249,19 @@ export default class GameFactory {
       .removeChild(bonusComponent)
     }
   }
+
+  spawnHealthbar() {
+    const { scene } = this
+    return (
+      new ECSA.Builder(scene)
+      .asGraphics()
+      .withParent(scene.stage)
+      .build()
+      .asGraphics()
+    )
+  }
+
+  removeHealthbar(graphics: ECSA.Graphics) {
+    this.scene.stage.removeChild(graphics)
+  }
 }

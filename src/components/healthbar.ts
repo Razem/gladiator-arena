@@ -12,19 +12,11 @@ export default class Healtbar extends BaseComponent {
   graphics: ECSA.Graphics
 
   onInit() {
-    const { scene } = this
-
-    this.graphics = (
-      new ECSA.Builder(scene)
-      .asGraphics()
-      .withParent(scene.stage)
-      .build()
-      .asGraphics()
-    )
+    this.graphics = this.factory.spawnHealthbar()
   }
 
   onRemove() {
-    this.scene.stage.removeChild(this.graphics)
+    this.factory.removeHealthbar(this.graphics)
   }
 
   onUpdate(delta: number, absolute: number) {
