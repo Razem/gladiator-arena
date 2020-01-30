@@ -1,5 +1,5 @@
 
-import { Vector } from '../../libs/pixi-component';
+import { Vector } from '../pixi-component';
 
 /**
  * Storage for aceleration and velocity

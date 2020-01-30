@@ -1,4 +1,4 @@
-import * as ECSA from '../../libs/pixi-component';
+import * as ECSA from '../pixi-component';
 import Dynamics from './dynamics';
 
 /**

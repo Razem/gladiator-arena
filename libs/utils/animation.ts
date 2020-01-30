@@ -1,4 +1,4 @@
-import * as ECSA from '../../libs/pixi-component';
+import * as ECSA from '../pixi-component';
 
 export class Interpolation {
   static linear: any = (current: number, start: number, length: number) => Math.min(1, Math.max(0, (current - start) / length));
