@@ -1,7 +1,8 @@
 {
   "private": true,
-  "name": "mi-aph-zemlirad-semestral-project",
-  "author": "Radomír Žemlička <info@razem.cz> (http://razem.cz)",
+  "name": "gladiator-arena",
+  "author": "Radomír Žemlička <info@razem.cz> (https://razem.cz)",
+  "license": "WTFPL",
   "scripts": {
     "start": "node scripts/deploy.js && tsc --noEmit && parcel templates/*.html --out-dir build",
     "clean": "node scripts/clean.js",

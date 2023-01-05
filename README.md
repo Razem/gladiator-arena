@@ -1,7 +1,5 @@
 # Gladiator Arena
 
-Author: Radomír Žemlička
-
 Gladiator Arena is a classic deathmatch game where the goal is to survive and kill all the enemies with your muscles and loyal mighty axe. It's absolutely brutal! "Wait, just using my axe?" you might say. Well, that would be insane, wouldn't it? Don't worry, there will be lots of bonuses that spawn randomly on the game field which will help you gain more speed, strength and health points.
 
 ## How to run this beautiful monstrosity
@@ -14,7 +12,7 @@ It's simple.
 4. open http://localhost:1234 in your browser
 5. start the bloodshed
 
-Or you can just load the live version here: http://gladiator-arena.razem.cz
+Or you can just load the live version here: https://gladiator-arena.razem.cz
 
 ## How to play and hopefully not die a painful death
 
